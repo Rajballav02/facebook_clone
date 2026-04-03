@@ -1,4 +1,4 @@
-# : Facebook Clone Layout
+# Facebook Clone Layout
 
 ## Aim
 To design a responsive three-column web page layout similar to the Facebook profile page using Bootstrap 5 and implement dynamic user profile updates using JavaScript.
