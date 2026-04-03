@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memories – Facebook Style</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      body.dark-mode {
+        background: #18191a;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .card,
+      body.dark-mode .sidebar-nav {
+        background: #242526 !important;
+        border-color: #3a3b3c !important;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .text-muted {
+        color: #b0b3b8 !important;
+      }
+
+      body.dark-mode .mem-year-tab:hover,
+      body.dark-mode .mem-year-tab.active {
+        background: #3a3b3c;
+      }
+
+      /* Navbar */
+      .navbar {
+        background: #1877f2 !important;
+      }
+
+      .navbar-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+
+      .navbar-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.12);
+      }
+
+      /* Layout */
+      .page-wrap {
+        display: flex;
+        margin-top: 56px;
+        min-height: calc(100vh - 56px);
+        justify-content: center;
+        gap: 20px;
+        padding: 20px 12px;
+      }
+
+      .main-col {
+        max-width: 680px;
+        width: 100%;
+      }
+
+      .side-col {
+        width: 320px;
+        flex-shrink: 0;
+      }
+
+      /* Hero Banner */
+      .memory-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        color: white;
+        padding: 32px 24px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      .memory-hero::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .memory-hero::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -20px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .memory-hero h2 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .memory-hero p {
+        opacity: 0.85;
+        font-size: 0.95rem;
+      }
+
+      .memory-date-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        backdrop-filter: blur(4px);
+      }
+
+      /* Memory Card */
+      .memory-card {
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 16px;
+        overflow: hidden;
+        transition:
+          box-shadow 0.2s,
+          transform 0.2s;
+      }
+
+      .memory-card:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+        transform: translateY(-2px);
+      }
+
+      .memory-card .year-chip {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        display: inline-block;
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .memory-card img.mem-img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+      }
+
+      .memory-card .card-body {
+        padding: 14px 16px;
+      }
+
+      .mem-text {
+        font-size: 0.93rem;
+        line-height: 1.5;
+      }
+
+      .mem-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .mem-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .btn-share-mem {
+        background: #1877f2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 16px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-share-mem:hover {
+        background: #166fe5;
+      }
+
+      .btn-save-mem {
+        background: #f0f2f5;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 16px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-save-mem:hover {
+        background: #e4e6eb;
+      }
+
+      /* Photo collage */
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .photo-grid img {
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      .photo-grid img:hover {
+        opacity: 0.85;
+      }
+
+      /* Year tabs sidebar */
+      .sidebar-nav {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        padding: 14px;
+        position: sticky;
+        top: 76px;
+      }
+
+      .sidebar-nav h6 {
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .mem-year-tab {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: background 0.15s;
+      }
+
+      .mem-year-tab:hover {
+        background: #f0f2f5;
+      }
+
+      .mem-year-tab.active {
+        background: #e7f3ff;
+        color: #1877f2;
+        font-weight: 700;
+      }
+
+      .mem-year-tab .year-count {
+        background: #e4e6eb;
+        border-radius: 20px;
+        padding: 2px 8px;
+        font-size: 0.78rem;
+        color: #555;
+      }
+
+      /* Toast */
+      #toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .fb-toast {
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        animation: toastIn 0.3s ease;
+        min-width: 200px;
+      }
+
+      .fb-toast.success {
+        border-left: 4px solid #42b72a;
+      }
+
+      .fb-toast.info {
+        border-left: 4px solid #1877f2;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .memory-card {
+        animation: fadeUp 0.3s ease;
+      }
+
+      @media (max-width: 900px) {
+        .side-col {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="toast-container"></div>
+
+    <nav
+      class="navbar navbar-dark fixed-top shadow-sm px-3 d-flex align-items-center justify-content-between"
+    >
+      <a class="navbar-brand fw-bold" href="index.html"
+        ><i class="fab fa-facebook fa-lg me-1"></i> Facebook</a
+      >
+      <div class="d-flex align-items-center gap-2">
+        <div
+          class="navbar-icon-btn"
+          onclick="toggleDarkMode()"
+          id="darkModeToggle"
+          title="Toggle Dark Mode"
+        >
+          <i class="fas fa-moon"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          onclick="window.location.href = 'index.html'"
+          title="Home"
+        >
+          <i class="fas fa-home"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          onclick="window.location.href = 'notifications.html'"
+          title="Notifications"
+        >
+          <i class="fas fa-bell"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          onclick="window.location.href = 'messages.html'"
+          title="Messages"
+        >
+          <i class="fab fa-facebook-messenger"></i>
+        </div>
+        <img
+          src="https://ui-avatars.com/api/?name=sriyans&amp;background=random"
+          id="navbar-user-img"
+          class="rounded-circle"
+          width="36"
+          height="36"
+          onclick="window.location.href = 'profile.html'"
+          title="Profile"
+          style="cursor: pointer; border: 2px solid white"
+          alt="Profile"
+        />
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+      <div class="main-col">
+        <!-- Hero -->
+        <div class="memory-hero">
+          <div class="memory-date-badge">
+            <i class="fas fa-calendar-alt me-1"></i>February 24
+          </div>
+          <h2>Your Memories ✨</h2>
+          <p>
+            We care about the memories you share here. We thought you'd like to
+            look back on this day.
+          </p>
+        </div>
+
+        <div id="memoriesContainer"></div>
+      </div>
+
+      <div class="side-col">
+        <div class="sidebar-nav">
+          <h6>
+            <i class="fas fa-history text-primary me-2"></i>Browse by Year
+          </h6>
+          <div id="yearTabs"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const memoriesData = [
+        {
+          id: 1,
+          year: 2024,
+          type: "post",
+          text: "Had the best weekend hiking trip! 🏔️ Nature is therapy.",
+          img: "https://picsum.photos/600/220?random=101",
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+        {
+          id: 2,
+          year: 2024,
+          type: "photo",
+          photos: [102, 103, 104, 105, 106, 107],
+          caption: "Beach vacation album 🌊 — 6 photos",
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+        {
+          id: 3,
+          year: 2023,
+          type: "post",
+          text: "Just got my degree! 🎓 Four years of hard work finally paid off. Thank you to everyone who supported me!",
+          img: "https://picsum.photos/600/220?random=108",
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+        {
+          id: 4,
+          year: 2023,
+          type: "post",
+          text: "New year, new goals! 💪 Starting 2023 with full energy. Who else is ready?",
+          img: null,
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+        {
+          id: 5,
+          year: 2022,
+          type: "photo",
+          photos: [110, 111, 112, 113, 114, 115],
+          caption: "Road trip with the crew 🚗 — 6 photos",
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+        {
+          id: 6,
+          year: 2022,
+          type: "post",
+          text: "Just moved to a new city! 🏙️ Excited and nervous at the same time. Here we go!",
+          img: "https://picsum.photos/600/220?random=116",
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+        {
+          id: 7,
+          year: 2021,
+          type: "post",
+          text: "First job offer accepted! 🎉 Starting my career journey. Couldn't be more grateful.",
+          img: null,
+          author: "sriyans",
+          avatarSeed: 1,
+        },
+      ];
+
+      let activeYear = "all";
+
+      function getYears() {
+        return [...new Set(memoriesData.map((m) => m.year))].sort(
+          (a, b) => b - a,
+        );
+      }
+
+      function renderYearTabs() {
+        const years = getYears();
+        document.getElementById("yearTabs").innerHTML =
+          `<div class="mem-year-tab active" onclick="filterYear('all',this)"><span>All Years</span><span class="year-count">${memoriesData.length}</span></div>` +
+          years
+            .map((y) => {
+              const cnt = memoriesData.filter((m) => m.year === y).length;
+              return `<div class="mem-year-tab" onclick="filterYear(${y},this)"><span>${y}</span><span class="year-count">${cnt}</span></div>`;
+            })
+            .join("");
+      }
+
+      function filterYear(year, el) {
+        activeYear = year;
+        document
+          .querySelectorAll(".mem-year-tab")
+          .forEach((t) => t.classList.remove("active"));
+        el.classList.add("active");
+        renderMemories();
+      }
+
+      function renderMemories() {
+        const list =
+          activeYear === "all"
+            ? memoriesData
+            : memoriesData.filter((m) => m.year === activeYear);
+        const yearGroups = {};
+        list.forEach((m) => {
+          if (!yearGroups[m.year]) yearGroups[m.year] = [];
+          yearGroups[m.year].push(m);
+        });
+
+        let html = "";
+        Object.keys(yearGroups)
+          .sort((a, b) => b - a)
+          .forEach((yr) => {
+            html += `<h6 class="fw-bold text-muted mb-2 mt-2"><i class="fas fa-clock me-2"></i>${yr === new Date().getFullYear() - 1 ? "1 Year Ago" : yr + " — " + (new Date().getFullYear() - yr) + " Years Ago"}</h6>`;
+            yearGroups[yr].forEach((m) => {
+              html += buildMemoryCard(m);
+            });
+          });
+
+        document.getElementById("memoriesContainer").innerHTML = html;
+      }
+
+      function buildMemoryCard(m) {
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(m.author)}&background=random`;
+        let content = "";
+        if (m.type === "photo") {
+          content = `<div class="photo-grid">${m.photos.map((s) => `<img src="https://picsum.photos/200/110?random=${s}" alt="memory" onclick="showToast('Opening photo…','info')">`).join("")}</div>`;
+        } else if (m.img) {
+          content = `<img class="mem-img" src="${m.img}" alt="memory">`;
+        }
+        return `
+    <div class="card memory-card">
+        ${m.img || m.type === "photo" ? content : ""}
+        <div class="card-body">
+            <span class="year-chip">${m.year}</span>
+            <div class="mem-author">
+                <img src="${avatarUrl}" class="rounded-circle" width="36" height="36" alt="${m.author}">
+                <div><div class="fw-bold">${m.author}</div><small class="text-muted">February 24, ${m.year}</small></div>
+            </div>
+            ${m.type === "photo" ? `<div class="mem-text text-muted">${m.caption}</div>` : `<div class="mem-text">${m.text}</div>`}
+            <div class="mem-actions">
+                <button class="btn-share-mem" onclick="shareMemory('${m.id}')"><i class="fas fa-share me-1"></i>Share Memory</button>
+                <button class="btn-save-mem" onclick="showToast('Memory saved! 📌','success')"><i class="far fa-bookmark me-1"></i>Save</button>
+            </div>
+        </div>
+    </div>`;
+      }
+
+      function shareMemory(id) {
+        showToast("Memory shared to your timeline! 🎉", "success");
+      }
+
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        document.querySelector("#darkModeToggle i").className =
+          document.body.classList.contains("dark-mode")
+            ? "fas fa-sun"
+            : "fas fa-moon";
+        showToast(
+          document.body.classList.contains("dark-mode")
+            ? "Dark mode on 🌙"
+            : "Light mode on ☀️",
+          "info",
+        );
+      }
+      function showToast(message, type = "info") {
+        const c = document.getElementById("toast-container");
+        const t = document.createElement("div");
+        t.className = `fb-toast ${type}`;
+        t.textContent = message;
+        c.appendChild(t);
+        setTimeout(() => {
+          t.style.opacity = "0";
+          t.style.transition = "opacity 0.4s";
+          setTimeout(() => t.remove(), 400);
+        }, 2500);
+      }
+      function loadProfile() {
+        const saved = localStorage.getItem("fbProfile");
+        if (saved)
+          document.getElementById("navbar-user-img").src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(JSON.parse(saved).name)}&background=random`;
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProfile();
+        renderYearTabs();
+        renderMemories();
+      });
+    </script>
+  </body>
+</html>

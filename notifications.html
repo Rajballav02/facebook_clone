@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications – Facebook Style</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      /* ── Dark Mode ── */
+      body.dark-mode {
+        background: #18191a;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .sidebar-nav,
+      body.dark-mode .notif-card,
+      body.dark-mode .notif-item {
+        background: #242526 !important;
+        border-color: #3a3b3c !important;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .notif-item:hover {
+        background: #3a3b3c !important;
+      }
+
+      body.dark-mode .notif-item.unread {
+        background: #1c2d3f !important;
+      }
+
+      body.dark-mode .notif-item.unread:hover {
+        background: #253447 !important;
+      }
+
+      body.dark-mode .text-muted {
+        color: #b0b3b8 !important;
+      }
+
+      body.dark-mode .filter-tab {
+        color: #b0b3b8;
+      }
+
+      body.dark-mode .filter-tab.active {
+        color: #1877f2;
+      }
+
+      body.dark-mode .filter-tab:hover {
+        background: #3a3b3c;
+      }
+
+      body.dark-mode .section-label {
+        color: #b0b3b8;
+      }
+
+      body.dark-mode .notif-option-btn {
+        background: #3a3b3c;
+      }
+
+      body.dark-mode .notif-option-btn:hover {
+        background: #4a4b4c;
+      }
+
+      body.dark-mode .empty-state {
+        color: #b0b3b8;
+      }
+
+      /* ── Navbar ── */
+      .navbar {
+        background: #1877f2 !important;
+      }
+
+      .navbar-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+
+      .navbar-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.12);
+      }
+
+      /* ── Page Layout ── */
+      .page-wrap {
+        display: flex;
+        margin-top: 56px;
+        min-height: calc(100vh - 56px);
+        justify-content: center;
+        padding: 20px 12px;
+        gap: 20px;
+      }
+
+      /* ── Main Panel ── */
+      .notif-panel {
+        width: 100%;
+        max-width: 680px;
+      }
+
+      /* ── Side Panel ── */
+      .side-panel {
+        width: 320px;
+        flex-shrink: 0;
+      }
+
+      /* ── Notification Card Container ── */
+      .notif-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .notif-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 16px 8px;
+      }
+
+      .notif-card-header h5 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      /* ── Filter Tabs ── */
+      .filter-tabs {
+        display: flex;
+        gap: 4px;
+        padding: 0 12px 8px;
+        border-bottom: 1px solid #e4e6eb;
+      }
+
+      .filter-tab {
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: none;
+        background: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        color: #65676b;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+
+      .filter-tab:hover {
+        background: #f0f2f5;
+      }
+
+      .filter-tab.active {
+        background: #e7f3ff;
+        color: #1877f2;
+      }
+
+      /* ── Section Label ── */
+      .section-label {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #65676b;
+        padding: 10px 16px 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      /* ── Notification Item ── */
+      .notif-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background 0.15s;
+        position: relative;
+        border-radius: 0;
+      }
+
+      .notif-item:hover {
+        background: #f0f2f5;
+      }
+
+      .notif-item.unread {
+        background: #e7f3ff;
+      }
+
+      .notif-item.unread:hover {
+        background: #dce8fd;
+      }
+
+      /* ── Avatar with icon badge ── */
+      .notif-avatar-wrap {
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .notif-avatar-wrap img {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .notif-type-icon {
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        color: white;
+      }
+
+      /* ── Notification Text ── */
+      .notif-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .notif-text {
+        font-size: 0.92rem;
+        line-height: 1.4;
+        color: #050505;
+      }
+
+      .notif-text strong {
+        font-weight: 700;
+      }
+
+      .notif-time {
+        font-size: 0.8rem;
+        color: #1877f2;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+
+      .notif-item:not(.unread) .notif-time {
+        color: #65676b;
+        font-weight: 400;
+      }
+
+      /* ── Unread dot ── */
+      .unread-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #1877f2;
+        flex-shrink: 0;
+        align-self: center;
+      }
+
+      /* ── Option button ── */
+      .notif-option-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #f0f2f5;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #444;
+        opacity: 0;
+        transition:
+          opacity 0.15s,
+          background 0.15s;
+        flex-shrink: 0;
+        align-self: center;
+      }
+
+      .notif-item:hover .notif-option-btn {
+        opacity: 1;
+      }
+
+      /* ── Mark all read btn ── */
+      .mark-all-btn {
+        background: none;
+        border: none;
+        color: #1877f2;
+        font-weight: 600;
+        font-size: 0.88rem;
+        cursor: pointer;
+        padding: 4px 10px;
+        border-radius: 6px;
+        transition: background 0.15s;
+      }
+
+      .mark-all-btn:hover {
+        background: #e7f3ff;
+      }
+
+      /* ── Empty State ── */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #65676b;
+      }
+
+      .empty-state i {
+        font-size: 4rem;
+        color: #ccc;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      /* ── Side Panel Widgets ── */
+      .widget-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+
+      .widget-card h6 {
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .setting-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #e4e6eb;
+      }
+
+      .setting-item:last-child {
+        border-bottom: none;
+      }
+
+      .setting-label {
+        font-size: 0.88rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .setting-label i {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #e7f3ff;
+        color: #1877f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+      }
+
+      /* ── Toggle Switch ── */
+      .form-switch .form-check-input {
+        width: 40px;
+        height: 22px;
+        cursor: pointer;
+      }
+
+      .form-switch .form-check-input:checked {
+        background-color: #1877f2;
+        border-color: #1877f2;
+      }
+
+      /* ── Toast ── */
+      #toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .fb-toast {
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        animation: toastIn 0.3s ease;
+        min-width: 200px;
+      }
+
+      .fb-toast.success {
+        border-left: 4px solid #42b72a;
+      }
+
+      .fb-toast.info {
+        border-left: 4px solid #1877f2;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* ── Pulse animation for new notifications ── */
+      @keyframes pulseDot {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.4);
+        }
+      }
+
+      .unread-dot {
+        animation: pulseDot 2s infinite;
+      }
+
+      /* ── Slide-in animation ── */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .notif-item {
+        animation: slideIn 0.25s ease;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 900px) {
+        .side-panel {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-dark fixed-top shadow-sm px-3 d-flex align-items-center justify-content-between"
+    >
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="fab fa-facebook fa-lg me-1"></i> Facebook
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <div
+          class="navbar-icon-btn"
+          onclick="toggleDarkMode()"
+          id="darkModeToggle"
+          title="Toggle Dark Mode"
+        >
+          <i class="fas fa-moon"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Home"
+          onclick="window.location.href = 'index.html'"
+        >
+          <i class="fas fa-home"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Friends"
+          onclick="window.location.href = 'friends.html'"
+        >
+          <i class="fas fa-user-friends"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Messages"
+          onclick="window.location.href = 'messages.html'"
+        >
+          <i class="fab fa-facebook-messenger"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Marketplace"
+          onclick="window.location.href = 'marketplace.html'"
+        >
+          <i class="fas fa-store"></i>
+        </div>
+        <img
+          src="https://ui-avatars.com/api/?name=sriyans&amp;background=random"
+          id="navbar-user-img"
+          class="rounded-circle"
+          width="36"
+          height="36"
+          onclick="window.location.href = 'profile.html'"
+          title="Profile"
+          style="cursor: pointer; border: 2px solid white"
+          alt="Profile"
+        />
+      </div>
+    </nav>
+
+    <!-- Page -->
+    <div class="page-wrap">
+      <!-- ── Main Notifications Panel ── -->
+      <div class="notif-panel">
+        <div class="notif-card">
+          <!-- Header -->
+          <div class="notif-card-header">
+            <h5><i class="fas fa-bell text-primary me-2"></i>Notifications</h5>
+            <div class="d-flex align-items-center gap-2">
+              <button class="mark-all-btn" onclick="markAllRead()">
+                <i class="fas fa-check-double me-1"></i>Mark all as read
+              </button>
+              <button
+                class="notif-option-btn"
+                style="opacity: 1"
+                onclick="showToast('Notification settings', 'info')"
+                title="Settings"
+              >
+                <i class="fas fa-cog"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="filter-tabs">
+            <button
+              class="filter-tab active"
+              onclick="switchFilter('all', this)"
+            >
+              All
+            </button>
+            <button class="filter-tab" onclick="switchFilter('unread', this)">
+              Unread
+            </button>
+            <button class="filter-tab" onclick="switchFilter('likes', this)">
+              Reactions
+            </button>
+            <button class="filter-tab" onclick="switchFilter('comments', this)">
+              Comments
+            </button>
+            <button class="filter-tab" onclick="switchFilter('friends', this)">
+              Friends
+            </button>
+          </div>
+
+          <!-- Notification List -->
+          <div id="notificationList"></div>
+        </div>
+      </div>
+
+      <!-- ── Side Panel ── -->
+      <div class="side-panel">
+        <!-- Notification Settings -->
+        <div class="widget-card">
+          <h6>
+            <i class="fas fa-sliders-h text-primary me-2"></i>Notification
+            Settings
+          </h6>
+          <div class="setting-item">
+            <div class="setting-label">
+              <div
+                style="
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: #e7f3ff;
+                  color: #1877f2;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 0.8rem;
+                "
+              >
+                <i class="fas fa-thumbs-up"></i>
+              </div>
+              Reactions
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                checked
+                onchange="showToast('Reaction notifications updated', 'info')"
+              />
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <div
+                style="
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: #fff3cd;
+                  color: #d39e00;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 0.8rem;
+                "
+              >
+                <i class="fas fa-comment"></i>
+              </div>
+              Comments
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                checked
+                onchange="showToast('Comment notifications updated', 'info')"
+              />
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <div
+                style="
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: #d4edda;
+                  color: #28a745;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 0.8rem;
+                "
+              >
+                <i class="fas fa-user-plus"></i>
+              </div>
+              Friend Requests
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                checked
+                onchange="
+                  showToast('Friend request notifications updated', 'info')
+                "
+              />
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <div
+                style="
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: #f8d7da;
+                  color: #dc3545;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 0.8rem;
+                "
+              >
+                <i class="fas fa-birthday-cake"></i>
+              </div>
+              Birthdays
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                checked
+                onchange="showToast('Birthday notifications updated', 'info')"
+              />
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <div
+                style="
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: #e2d9f3;
+                  color: #7b2fc2;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 0.8rem;
+                "
+              >
+                <i class="fas fa-share"></i>
+              </div>
+              Shares &amp; Tags
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                onchange="showToast('Share notifications updated', 'info')"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="widget-card">
+          <h6><i class="fas fa-chart-bar text-primary me-2"></i>This Week</h6>
+          <div class="d-flex justify-content-between text-center">
+            <div>
+              <div class="fw-bold fs-4 text-primary" id="totalCount">0</div>
+              <small class="text-muted">Total</small>
+            </div>
+            <div>
+              <div class="fw-bold fs-4 text-danger" id="unreadCount">0</div>
+              <small class="text-muted">Unread</small>
+            </div>
+            <div>
+              <div class="fw-bold fs-4 text-success" id="readCount">0</div>
+              <small class="text-muted">Read</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Test Notification -->
+        <div class="widget-card">
+          <h6>
+            <i class="fas fa-plus-circle text-primary me-2"></i>Simulate
+            Notification
+          </h6>
+          <p class="text-muted small mb-2">
+            Add a random notification to test.
+          </p>
+          <button
+            class="btn btn-primary btn-sm w-100"
+            onclick="addRandomNotification()"
+          >
+            <i class="fas fa-bell me-1"></i> Generate Notification
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      /* ══════════════════════════════════════════════════════════════
+           notifications.js
+        ══════════════════════════════════════════════════════════════ */
+
+      let currentFilter = "all";
+
+      // ── Notification Data ─────────────────────────────────────────
+      let notifications = [
+        {
+          id: 1,
+          type: "like",
+          unread: true,
+          avatar: 42,
+          name: "Alex",
+          text: "<strong>Alex</strong> and <strong>12 others</strong> reacted to your post.",
+          time: "2 minutes ago",
+          timeGroup: "new",
+        },
+        {
+          id: 2,
+          type: "friend_request",
+          unread: true,
+          avatar: 43,
+          name: "Priya",
+          text: "<strong>Priya</strong> sent you a friend request.",
+          time: "15 minutes ago",
+          timeGroup: "new",
+        },
+        {
+          id: 3,
+          type: "comment",
+          unread: true,
+          avatar: 44,
+          name: "Raj",
+          text: '<strong>Raj</strong> commented on your photo: "This looks amazing! 🔥"',
+          time: "1 hour ago",
+          timeGroup: "new",
+        },
+        {
+          id: 4,
+          type: "birthday",
+          unread: true,
+          avatar: 45,
+          name: "Sara",
+          text: "Today is <strong>Sara's</strong> birthday. Send her a wish 🎂",
+          time: "3 hours ago",
+          timeGroup: "today",
+        },
+        {
+          id: 5,
+          type: "share",
+          unread: false,
+          avatar: 46,
+          name: "Meera",
+          text: "<strong>Meera</strong> shared your post with her friends.",
+          time: "5 hours ago",
+          timeGroup: "today",
+        },
+        {
+          id: 6,
+          type: "like",
+          unread: false,
+          avatar: 47,
+          name: "Arjun",
+          text: "<strong>Arjun</strong> reacted ❤️ to your profile picture.",
+          time: "8 hours ago",
+          timeGroup: "today",
+        },
+        {
+          id: 7,
+          type: "comment",
+          unread: false,
+          avatar: 48,
+          name: "Dev",
+          text: "<strong>Dev</strong> replied to your comment on a post.",
+          time: "1 day ago",
+          timeGroup: "earlier",
+        },
+        {
+          id: 8,
+          type: "friend_request",
+          unread: false,
+          avatar: 49,
+          name: "Tanya",
+          text: "<strong>Tanya</strong> accepted your friend request. You are now friends!",
+          time: "2 days ago",
+          timeGroup: "earlier",
+        },
+        {
+          id: 9,
+          type: "like",
+          unread: false,
+          avatar: 50,
+          name: "Karan",
+          text: "<strong>Karan</strong> and <strong>5 others</strong> reacted to your comment.",
+          time: "3 days ago",
+          timeGroup: "earlier",
+        },
+        {
+          id: 10,
+          type: "birthday",
+          unread: false,
+          avatar: 51,
+          name: "Nisha",
+          text: "It was <strong>Nisha's</strong> birthday yesterday. You can still send a wish.",
+          time: "4 days ago",
+          timeGroup: "earlier",
+        },
+      ];
+
+      // ── Type config (icon + color) ────────────────────────────────
+      const typeConfig = {
+        like: { icon: "fas fa-thumbs-up", bg: "#1877f2" },
+        comment: { icon: "fas fa-comment", bg: "#f59e0b" },
+        friend_request: { icon: "fas fa-user-plus", bg: "#10b981" },
+        birthday: { icon: "fas fa-birthday-cake", bg: "#e0245e" },
+        share: { icon: "fas fa-share", bg: "#8b5cf6" },
+      };
+
+      // ── Filter notifications ──────────────────────────────────────
+      function getFiltered() {
+        if (currentFilter === "all") return notifications;
+        if (currentFilter === "unread")
+          return notifications.filter((n) => n.unread);
+        if (currentFilter === "likes")
+          return notifications.filter((n) => n.type === "like");
+        if (currentFilter === "comments")
+          return notifications.filter((n) => n.type === "comment");
+        if (currentFilter === "friends")
+          return notifications.filter((n) => n.type === "friend_request");
+        return notifications;
+      }
+
+      // ── Render ────────────────────────────────────────────────────
+      function render() {
+        const list = getFiltered();
+        const el = document.getElementById("notificationList");
+        const groups = { new: [], today: [], earlier: [] };
+
+        list.forEach((n) => groups[n.timeGroup]?.push(n));
+
+        let html = "";
+
+        if (groups.new.length) {
+          html += `<div class="section-label">New</div>`;
+          html += groups.new.map((n) => buildItem(n)).join("");
+        }
+        if (groups.today.length) {
+          html += `<div class="section-label">Today</div>`;
+          html += groups.today.map((n) => buildItem(n)).join("");
+        }
+        if (groups.earlier.length) {
+          html += `<div class="section-label">Earlier This Week</div>`;
+          html += groups.earlier.map((n) => buildItem(n)).join("");
+        }
+
+        if (!list.length) {
+          html = `<div class="empty-state">
+            <i class="fas fa-bell-slash"></i>
+            <h6>No notifications</h6>
+            <p class="text-muted small">You're all caught up!</p>
+        </div>`;
+        }
+
+        el.innerHTML = html;
+        updateStats();
+      }
+
+      function buildItem(n) {
+        const cfg = typeConfig[n.type] || { icon: "fas fa-bell", bg: "#888" };
+        return `
+    <div class="notif-item ${n.unread ? "unread" : ""}" id="notif-${n.id}" onclick="markRead(${n.id})">
+        <div class="notif-avatar-wrap">
+            <img src="https://picsum.photos/56/56?random=${n.avatar}" alt="${n.name}">
+            <div class="notif-type-icon" style="background:${cfg.bg};">
+                <i class="${cfg.icon}"></i>
+            </div>
+        </div>
+        <div class="notif-body">
+            <div class="notif-text">${n.text}</div>
+            <div class="notif-time">${n.unread ? "🔵 " : ""}${n.time}</div>
+            ${
+              n.type === "friend_request" && n.unread
+                ? `
+            <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-primary btn-sm px-3" onclick="handleFriendReq(event,${n.id},'accept')">Confirm</button>
+                <button class="btn btn-light btn-sm px-3" onclick="handleFriendReq(event,${n.id},'delete')">Delete</button>
+            </div>`
+                : ""
+            }
+            ${
+              n.type === "birthday"
+                ? `
+            <div class="mt-2">
+                <button class="btn btn-outline-primary btn-sm px-3" onclick="sendWish(event,'${n.name}')">
+                    <i class="fas fa-gift me-1"></i>Say Happy Birthday
+                </button>
+            </div>`
+                : ""
+            }
+        </div>
+        ${n.unread ? '<div class="unread-dot"></div>' : ""}
+        <button class="notif-option-btn" onclick="notifOptions(event, ${n.id})" title="Options">
+            <i class="fas fa-ellipsis-h"></i>
+        </button>
+    </div>`;
+      }
+
+      // ── Actions ───────────────────────────────────────────────────
+      function markRead(id) {
+        const n = notifications.find((x) => x.id === id);
+        if (n && n.unread) {
+          n.unread = false;
+          render();
+        }
+      }
+
+      function markAllRead() {
+        notifications.forEach((n) => (n.unread = false));
+        render();
+        showToast("All notifications marked as read ✓", "success");
+      }
+
+      function switchFilter(filter, el) {
+        currentFilter = filter;
+        document
+          .querySelectorAll(".filter-tab")
+          .forEach((t) => t.classList.remove("active"));
+        el.classList.add("active");
+        render();
+      }
+
+      function handleFriendReq(e, id, action) {
+        e.stopPropagation();
+        const n = notifications.find((x) => x.id === id);
+        if (!n) return;
+        if (action === "accept") {
+          n.text = `<strong>${n.name}</strong> is now your friend! 🎉`;
+          n.type = "share";
+          showToast(`You and ${n.name} are now friends! 🎉`, "success");
+        } else {
+          notifications = notifications.filter((x) => x.id !== id);
+          showToast("Friend request deleted.", "info");
+        }
+        n.unread = false;
+        render();
+      }
+
+      function sendWish(e, name) {
+        e.stopPropagation();
+        showToast(`🎂 Birthday wish sent to ${name}!`, "success");
+      }
+
+      function notifOptions(e, id) {
+        e.stopPropagation();
+        const n = notifications.find((x) => x.id === id);
+        const options = n?.unread
+          ? "Mark as read · Remove this notification"
+          : "Mark as unread · Remove this notification";
+        showToast(options, "info");
+      }
+
+      // ── Update Stats Widget ───────────────────────────────────────
+      function updateStats() {
+        const total = notifications.length;
+        const unread = notifications.filter((n) => n.unread).length;
+        document.getElementById("totalCount").textContent = total;
+        document.getElementById("unreadCount").textContent = unread;
+        document.getElementById("readCount").textContent = total - unread;
+      }
+
+      // ── Generate Random Notification ─────────────────────────────
+      const fakeNames = [
+        "Aarav",
+        "Zara",
+        "Ravi",
+        "Pooja",
+        "Sid",
+        "Kavya",
+        "Rohan",
+        "Disha",
+      ];
+      const fakeTexts = {
+        like: (n) =>
+          `<strong>${n}</strong> and <strong>${Math.floor(Math.random() * 15) + 1} others</strong> reacted to your post.`,
+        comment: (n) =>
+          `<strong>${n}</strong> commented: "Wow, great post! 😍"`,
+        friend_request: (n) =>
+          `<strong>${n}</strong> sent you a friend request.`,
+        birthday: (n) =>
+          `Today is <strong>${n}'s</strong> birthday 🎂 Send a wish!`,
+        share: (n) => `<strong>${n}</strong> shared your post.`,
+      };
+      const typeKeys = Object.keys(fakeTexts);
+
+      function addRandomNotification() {
+        const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+        const type = typeKeys[Math.floor(Math.random() * typeKeys.length)];
+        const newNotif = {
+          id: Date.now(),
+          type,
+          unread: true,
+          avatar: Math.floor(Math.random() * 50) + 80,
+          name,
+          text: fakeTexts[type](name),
+          time: "Just now",
+          timeGroup: "new",
+        };
+        notifications.unshift(newNotif);
+        render();
+        showToast(`New notification from ${name}! 🔔`, "success");
+      }
+
+      // ── Dark Mode ─────────────────────────────────────────────────
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        const icon = document.querySelector("#darkModeToggle i");
+        icon.className = document.body.classList.contains("dark-mode")
+          ? "fas fa-sun"
+          : "fas fa-moon";
+        showToast(
+          document.body.classList.contains("dark-mode")
+            ? "Dark mode on 🌙"
+            : "Light mode on ☀️",
+          "info",
+        );
+      }
+
+      // ── Load Profile ──────────────────────────────────────────────
+      function loadProfile() {
+        const saved = localStorage.getItem("fbProfile");
+        if (saved) {
+          const p = JSON.parse(saved);
+          document.getElementById("navbar-user-img").src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random`;
+        }
+      }
+
+      // ── Toast ─────────────────────────────────────────────────────
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `fb-toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          toast.style.transition = "opacity 0.4s";
+          setTimeout(() => toast.remove(), 400);
+        }, 2500);
+      }
+
+      // ── Init ──────────────────────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProfile();
+        render();
+      });
+    </script>
+  </body>
+</html>

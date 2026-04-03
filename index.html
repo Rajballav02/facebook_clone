@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Style Layout</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#"
+          ><i class="fab fa-facebook fa-lg"></i> Facebook</a
+        >
+
+        <!-- Search Bar -->
+        <form class="d-none d-lg-flex w-25" onsubmit="return false;">
+          <input
+            class="form-control me-2 rounded-pill"
+            type="search"
+            placeholder="Search Facebook"
+            aria-label="Search"
+            id="searchInput"
+            oninput="handleSearch(this.value)"
+          />
+        </form>
+
+        <!-- Nav Icons -->
+        <div class="d-flex align-items-center gap-2 text-white">
+          <div
+            class="navbar-nav-icon active"
+            title="Home"
+            onclick="window.location.href = 'index.html'"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-home fa-lg"></i>
+          </div>
+          <div
+            class="navbar-nav-icon"
+            title="Friends"
+            onclick="window.location.href = 'friends.html'"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-user-friends fa-lg"></i>
+          </div>
+          <div
+            class="navbar-nav-icon"
+            title="Watch"
+            onclick="window.location.href = 'watch.html'"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-video fa-lg"></i>
+          </div>
+          <div
+            class="navbar-nav-icon"
+            title="Marketplace"
+            onclick="window.location.href = 'marketplace.html'"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-store fa-lg"></i>
+          </div>
+          <div
+            class="navbar-nav-icon"
+            title="Groups"
+            onclick="window.location.href = 'groups.html'"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-users fa-lg"></i>
+          </div>
+        </div>
+
+        <!-- Right Icons -->
+        <div class="d-flex align-items-center gap-2">
+          <!-- Dark Mode Toggle -->
+          <div
+            class="navbar-icon-btn"
+            id="darkModeToggle"
+            onclick="toggleDarkMode()"
+            title="Toggle Dark Mode"
+          >
+            <i class="fas fa-moon"></i>
+          </div>
+          <div class="navbar-icon-btn" title="Menu">
+            <i class="fas fa-th"></i>
+          </div>
+          <div
+            class="navbar-icon-btn"
+            title="Messenger"
+            onclick="window.location.href = 'messages.html'"
+          >
+            <i class="fab fa-facebook-messenger"></i>
+          </div>
+          <div
+            class="navbar-icon-btn position-relative"
+            title="Notifications"
+            onclick="window.location.href = 'notifications.html'"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-bell"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              style="font-size: 0.6rem"
+              >3</span
+            >
+          </div>
+          <img
+            src="https://ui-avatars.com/api/?name=Sriyans&amp;background=random"
+            class="rounded-circle"
+            width="40"
+            height="40"
+            alt="Profile"
+            id="navbar-user-img"
+            onclick="window.location.href = 'profile.html'"
+            title="View My Profile"
+            style="
+              cursor: pointer;
+              border: 2px solid white;
+              transition: transform 0.2s;
+            "
+            onmouseover="this.style.transform = 'scale(1.1)'"
+            onmouseout="this.style.transform = 'scale(1)'"
+          />
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5 pt-3">
+      <div class="row pt-3">
+        <!-- Left Column: Sidebar -->
+        <div
+          class="col-md-3 d-none d-md-block sticky-top"
+          style="top: 70px; height: calc(100vh - 70px); overflow-y: auto"
+        >
+          <div class="list-group list-group-flush bg-transparent">
+            <a
+              href="#"
+              class="list-group-item list-group-item-action bg-transparent border-0 fw-bold"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Sriyans&amp;background=random"
+                class="rounded-circle me-2"
+                width="30"
+                height="30"
+                id="sidebar-user-img"
+              />
+              <span id="sidebar-user-name">Sriyans</span>
+            </a>
+            <div class="ps-3 pb-2">
+              <small class="text-muted" id="sidebar-user-location">
+                <i class="fas fa-map-marker-alt me-1"></i>New York, USA </small
+              ><br />
+              <small class="text-muted fst-italic" id="sidebar-user-bio"
+                >Living life one day at a time.</small
+              >
+            </div>
+            <a
+              href="friends.html"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <i class="fas fa-user-friends text-primary me-3"></i> Friends
+            </a>
+            <a
+              href="groups.html"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <i class="fas fa-users text-primary me-3"></i> Groups
+            </a>
+            <a
+              href="marketplace.html"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <i class="fas fa-store text-primary me-3"></i> Marketplace
+            </a>
+            <a
+              href="watch.html"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <i class="fas fa-video text-primary me-3"></i> Watch
+            </a>
+            <a
+              href="memories.html"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <i class="fas fa-history text-primary me-3"></i> Memories
+            </a>
+            <button
+              class="list-group-item list-group-item-action bg-transparent border-0 text-primary fw-bold"
+              data-bs-toggle="modal"
+              data-bs-target="#editProfileModal"
+            >
+              <i class="fas fa-edit me-3"></i> Edit Profile
+            </button>
+          </div>
+          <hr />
+          <h6 class="text-muted ps-3">Your Shortcuts</h6>
+          <div class="list-group list-group-flush bg-transparent">
+            <a
+              href="#"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <img src="https://via.placeholder.com/30" class="rounded me-2" />
+              Web Programming
+            </a>
+            <a
+              href="#"
+              class="list-group-item list-group-item-action bg-transparent border-0"
+            >
+              <img src="https://via.placeholder.com/30" class="rounded me-2" />
+              Coding Group
+            </a>
+          </div>
+        </div>
+
+        <!-- Middle Column: Feed -->
+        <div class="col-md-6 col-sm-12">
+          <!-- Create Post Card -->
+          <div class="card shadow-sm mb-3 border-0 rounded-3">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <img
+                  src="https://ui-avatars.com/api/?name=Sriyans&amp;background=random"
+                  class="rounded-circle me-2"
+                  width="40"
+                  height="40"
+                  id="post-user-img"
+                />
+                <input
+                  type="text"
+                  class="form-control rounded-pill bg-light border-0"
+                  placeholder="What's on your mind, Sriyans?"
+                  id="post-placeholder-input"
+                  onclick="openPostCompose()"
+                  readonly
+                />
+              </div>
+
+              <!-- Expandable Post Compose Area -->
+              <div class="post-compose-area" id="postComposeArea">
+                <textarea
+                  class="form-control border-0 bg-transparent"
+                  id="postTextArea"
+                  placeholder="What's on your mind, Sriyans?"
+                  rows="3"
+                  oninput="updateCharCount(this)"
+                ></textarea>
+                <div class="post-char-count">
+                  <span id="charCount">0</span>/300
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-2"
+                >
+                  <div class="d-flex gap-2">
+                    <span
+                      class="badge bg-success rounded-pill"
+                      style="cursor: pointer"
+                    >
+                      <i class="fas fa-images me-1"></i> Photo
+                    </span>
+                    <span
+                      class="badge bg-warning text-dark rounded-pill"
+                      style="cursor: pointer"
+                    >
+                      <i class="far fa-smile me-1"></i> Feeling
+                    </span>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button
+                      class="btn btn-sm btn-light"
+                      onclick="closePostCompose()"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="submitPost()"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+              <div class="d-flex justify-content-between">
+                <button
+                  class="btn btn-light w-100 text-danger"
+                  onclick="openPostCompose()"
+                >
+                  <i class="fas fa-video me-2"></i> Live Video
+                </button>
+                <button
+                  class="btn btn-light w-100 text-success"
+                  onclick="openPostCompose()"
+                >
+                  <i class="fas fa-images me-2"></i> Photo/Video
+                </button>
+                <button
+                  class="btn btn-light w-100 text-warning"
+                  onclick="openPostCompose()"
+                >
+                  <i class="far fa-smile me-2"></i> Feeling
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Story Section -->
+          <div
+            class="d-flex gap-2 mb-3 pb-1"
+            style="overflow-x: auto; scrollbar-width: none"
+          >
+            <!-- Add Story -->
+            <div
+              class="story-item position-relative"
+              style="background: #ddd; flex-shrink: 0"
+              onclick="showToast('Story feature coming soon!', 'info')"
+              title="Add Story"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Sriyans&background=random"
+                class="w-100 h-100"
+                style="opacity: 0.8; object-fit: cover"
+                id="story-user-img"
+                alt="Add Story"
+              />
+              <div
+                style="
+                  position: absolute;
+                  bottom: 24px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background: #1877f2;
+                  border-radius: 50%;
+                  width: 28px;
+                  height: 28px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border: 3px solid white;
+                  font-size: 1rem;
+                  color: white;
+                "
+              >
+                +
+              </div>
+              <div class="story-label">Add Story</div>
+            </div>
+
+            <!-- Story 1 -->
+            <div
+              class="story-item"
+              style="
+                background: url(&quot;https://picsum.photos/120/200?random=1&quot;)
+                  center/cover;
+                flex-shrink: 0;
+              "
+              onclick="openStory(0)"
+              title="Alex's Story"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Alex&background=random"
+                style="
+                  position: absolute;
+                  top: 8px;
+                  left: 8px;
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 50%;
+                  border: 2px solid #1877f2;
+                "
+                alt="Alex"
+              />
+              <div class="story-label">Alex</div>
+            </div>
+            <!-- Story 2 -->
+            <div
+              class="story-item"
+              style="
+                background: url(&quot;https://picsum.photos/120/200?random=2&quot;)
+                  center/cover;
+                flex-shrink: 0;
+              "
+              onclick="openStory(1)"
+              title="Priya's Story"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Priya&background=random"
+                style="
+                  position: absolute;
+                  top: 8px;
+                  left: 8px;
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 50%;
+                  border: 2px solid #42b72a;
+                "
+                alt="Priya"
+              />
+              <div class="story-label">Priya</div>
+            </div>
+            <!-- Story 3 -->
+            <div
+              class="story-item"
+              style="
+                background: url(&quot;https://picsum.photos/120/200?random=3&quot;)
+                  center/cover;
+                flex-shrink: 0;
+              "
+              onclick="openStory(2)"
+              title="Sriyans's Story"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Sriyans&background=random"
+                style="
+                  position: absolute;
+                  top: 8px;
+                  left: 8px;
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 50%;
+                  border: 2px solid #1877f2;
+                "
+                alt="Sriyans"
+              />
+              <div class="story-label">Sriyans</div>
+            </div>
+            <!-- Story 4 -->
+            <div
+              class="story-item"
+              style="
+                background: url(&quot;https://picsum.photos/120/200?random=4&quot;)
+                  center/cover;
+                flex-shrink: 0;
+              "
+              onclick="openStory(3)"
+              title="Sara's Story"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Sara&background=random"
+                style="
+                  position: absolute;
+                  top: 8px;
+                  left: 8px;
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 50%;
+                  border: 2px solid #e0245e;
+                "
+                alt="Sara"
+              />
+              <div class="story-label">Sara</div>
+            </div>
+            <!-- Story 5 -->
+            <div
+              class="story-item"
+              style="
+                background: url(&quot;https://picsum.photos/120/200?random=5&quot;)
+                  center/cover;
+                flex-shrink: 0;
+              "
+              onclick="openStory(4)"
+              title="Meera's Story"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Meera&background=random"
+                style="
+                  position: absolute;
+                  top: 8px;
+                  left: 8px;
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 50%;
+                  border: 2px solid #f59e0b;
+                "
+                alt="Meera"
+              />
+              <div class="story-label">Meera</div>
+            </div>
+          </div>
+
+          <!-- Dynamic posts injected here by JS -->
+          <div id="feed"></div>
+        </div>
+
+        <!-- Right Column: Contacts -->
+        <div
+          class="col-md-3 d-none d-lg-block sticky-top"
+          style="top: 70px; height: calc(100vh - 70px); overflow-y: auto"
+        >
+          <!-- Sponsored -->
+          <h6 class="text-muted fw-bold px-1 mb-2">Sponsored</h6>
+          <div
+            class="card border-0 shadow-sm rounded-3 mb-2"
+            style="cursor: pointer; overflow: hidden"
+            onclick="showToast('Opening shop.com…', 'info')"
+          >
+            <img
+              src="https://picsum.photos/280/130?random=500"
+              class="card-img-top"
+              style="object-fit: cover; height: 110px"
+              alt="Ad"
+            />
+            <div class="card-body p-2">
+              <div class="fw-bold" style="font-size: 0.88rem">
+                Wireless Noise-Cancel Headphones 🎧
+              </div>
+              <small class="text-muted">shop.techgadgets.com</small>
+            </div>
+          </div>
+          <div
+            class="card border-0 shadow-sm rounded-3 mb-3"
+            style="cursor: pointer; overflow: hidden"
+            onclick="showToast('Opening traveldeals.com…', 'info')"
+          >
+            <img
+              src="https://picsum.photos/280/130?random=501"
+              class="card-img-top"
+              style="object-fit: cover; height: 110px"
+              alt="Ad"
+            />
+            <div class="card-body p-2">
+              <div class="fw-bold" style="font-size: 0.88rem">
+                ✈️ Flights from ₹1999 — Book Now!
+              </div>
+              <small class="text-muted">traveldeals.com</small>
+            </div>
+          </div>
+
+          <hr />
+
+          <!-- Birthdays Widget -->
+          <div class="card border-0 shadow-sm rounded-3 mb-3 p-2">
+            <div class="d-flex align-items-center gap-2">
+              <div
+                style="
+                  width: 38px;
+                  height: 38px;
+                  background: #fff3cd;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 1.2rem;
+                  flex-shrink: 0;
+                "
+              >
+                🎂
+              </div>
+              <div>
+                <span class="fw-semibold" style="font-size: 0.88rem"
+                  >Sara's</span
+                >
+                <span style="font-size: 0.85rem">birthday is today!</span
+                ><br /><button
+                  class="btn btn-sm btn-outline-primary mt-1 px-2 py-0"
+                  style="font-size: 0.78rem"
+                  onclick="
+                    showToast('Birthday wish sent to Sara! 🎉', 'success')
+                  "
+                >
+                  Say Happy Birthday
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contacts -->
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="text-muted fw-bold mb-0">Contacts</h6>
+            <div class="d-flex gap-2">
+              <i
+                class="fas fa-video text-muted"
+                style="cursor: pointer"
+                onclick="showToast('Video call coming soon!', 'info')"
+                title="Video Call"
+              ></i>
+              <i
+                class="fas fa-search text-muted"
+                style="cursor: pointer"
+                title="Search"
+              ></i>
+              <i
+                class="fas fa-ellipsis-h text-muted"
+                style="cursor: pointer"
+                title="More"
+              ></i>
+            </div>
+          </div>
+          <div class="list-group list-group-flush" id="contactList"></div>
+
+          <!-- Trending Topics -->
+          <hr />
+          <h6 class="text-muted fw-bold mb-2 px-1">Trending 🔥</h6>
+          <div id="trendingList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div
+      class="modal fade"
+      id="editProfileModal"
+      tabindex="-1"
+      aria-labelledby="editProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="profileForm">
+              <div class="mb-3">
+                <label for="userNameInput" class="form-label">Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="userNameInput"
+                  value="sriyans"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="userLocationInput" class="form-label"
+                  >Location</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="userLocationInput"
+                  value="New York, USA"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="userBioInput" class="form-label">Bio</label>
+                <textarea
+                  class="form-control"
+                  id="userBioInput"
+                  rows="2"
+                  placeholder="Write something about yourself..."
+                >
+Living life one day at a time.</textarea
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="updateProfile()"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Viewer Modal -->
+    <div
+      id="storyOverlay"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      "
+    >
+      <!-- Progress bars -->
+      <div
+        style="
+          position: absolute;
+          top: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 4px;
+          width: min(380px, 90vw);
+        "
+        id="storyProgressBars"
+      ></div>
+      <!-- Close -->
+      <button
+        onclick="closeStory()"
+        style="
+          position: absolute;
+          top: 14px;
+          right: 20px;
+          background: none;
+          border: none;
+          color: white;
+          font-size: 1.5rem;
+          cursor: pointer;
+          z-index: 9999;
+        "
+        title="Close"
+      >
+        &times;
+      </button>
+      <!-- Author -->
+      <div
+        style="
+          position: absolute;
+          top: 36px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: white;
+          width: min(380px, 90vw);
+        "
+      >
+        <img
+          id="storyAuthorAvatar"
+          src=""
+          style="
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid white;
+          "
+          alt="author"
+        />
+        <div>
+          <div
+            id="storyAuthorName"
+            style="font-weight: 700; font-size: 0.95rem"
+          ></div>
+          <div style="font-size: 0.75rem; opacity: 0.8">Just now</div>
+        </div>
+      </div>
+      <!-- Image -->
+      <img
+        id="storyImage"
+        src=""
+        style="
+          max-height: 85vh;
+          max-width: min(380px, 95vw);
+          border-radius: 16px;
+          object-fit: cover;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        "
+        alt="story"
+      />
+      <!-- Nav arrows -->
+      <button
+        onclick="prevStory()"
+        style="
+          position: absolute;
+          left: max(16px, calc(50% - 220px));
+          background: rgba(255, 255, 255, 0.15);
+          border: none;
+          color: white;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          font-size: 1.1rem;
+          cursor: pointer;
+        "
+        title="Previous"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button
+        onclick="nextStory()"
+        style="
+          position: absolute;
+          right: max(16px, calc(50% - 220px));
+          background: rgba(255, 255, 255, 0.15);
+          border: none;
+          color: white;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          font-size: 1.1rem;
+          cursor: pointer;
+        "
+        title="Next"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <!-- React -->
+      <div
+        style="
+          position: absolute;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 10px;
+        "
+      >
+        <button
+          onclick="showToast('❤️ Reaction sent!', 'success')"
+          style="
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 1.1rem;
+          "
+        >
+          ❤️
+        </button>
+        <button
+          onclick="showToast('😂 Reaction sent!', 'success')"
+          style="
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 1.1rem;
+          "
+        >
+          😂
+        </button>
+        <button
+          onclick="showToast('😮 Reaction sent!', 'success')"
+          style="
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 1.1rem;
+          "
+        >
+          😮
+        </button>
+        <button
+          onclick="showToast('Reply sent!', 'success')"
+          style="
+            background: #1877f2;
+            border: none;
+            color: white;
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+          "
+        >
+          <i class="fas fa-paper-plane me-1"></i>Reply
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Mini-Chat Widget -->
+    <div
+      id="miniChatWidget"
+      style="position: fixed; bottom: 24px; right: 24px; z-index: 5000"
+    >
+      <!-- Bubble -->
+      <div
+        id="miniChatBubble"
+        onclick="toggleMiniChat()"
+        style="
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #1877f2, #42b0f5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 4px 16px rgba(24, 119, 242, 0.5);
+          color: white;
+          font-size: 1.3rem;
+          transition: transform 0.2s;
+        "
+        title="Open Chat"
+        onmouseover="this.style.transform = 'scale(1.1)'"
+        onmouseout="this.style.transform = 'scale(1)'"
+      >
+        <i class="fab fa-facebook-messenger"></i>
+        <span
+          id="miniChatBadge"
+          style="
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e0245e;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+          "
+          >2</span
+        >
+      </div>
+      <!-- Panel -->
+      <div
+        id="miniChatPanel"
+        style="
+          display: none;
+          position: absolute;
+          bottom: 62px;
+          right: 0;
+          width: 300px;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+          overflow: hidden;
+          animation: slideUpChat 0.2s ease;
+        "
+      >
+        <div
+          style="
+            background: #1877f2;
+            padding: 12px 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <span style="font-weight: 700"
+            ><i class="fab fa-facebook-messenger me-2"></i>Chats</span
+          >
+          <div style="display: flex; gap: 8px">
+            <span
+              style="cursor: pointer; opacity: 0.8"
+              onclick="window.location.href = 'messages.html'"
+              title="Open Messenger"
+              ><i class="fas fa-expand"></i
+            ></span>
+            <span
+              style="cursor: pointer; opacity: 0.8"
+              onclick="toggleMiniChat()"
+              title="Close"
+              >&times;</span
+            >
+          </div>
+        </div>
+        <div
+          id="miniChatList"
+          style="max-height: 300px; overflow-y: auto"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+  </body>
+</html>

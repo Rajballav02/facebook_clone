@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile – Facebook Style</title>
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* ── Base ─────────────────────────────────────────────── */
+      body {
+        background: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      body.dark-mode {
+        background: #18191a;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .card,
+      body.dark-mode .card-body,
+      body.dark-mode .modal-content {
+        background: #242526 !important;
+        color: #e4e6eb;
+        border-color: #3a3b3c !important;
+      }
+
+      body.dark-mode .nav-tabs .nav-link {
+        color: #b0b3b8;
+      }
+
+      body.dark-mode .nav-tabs .nav-link.active {
+        background: #242526;
+        color: #e4e6eb;
+        border-bottom-color: #242526;
+      }
+
+      body.dark-mode .form-control {
+        background: #3a3b3c;
+        color: #e4e6eb;
+        border-color: #555;
+      }
+
+      body.dark-mode hr {
+        border-color: #3a3b3c;
+      }
+
+      body.dark-mode .text-muted {
+        color: #b0b3b8 !important;
+      }
+
+      body.dark-mode .btn-light {
+        background: transparent;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .btn-light:hover {
+        background: #3a3b3c;
+      }
+
+      body.dark-mode .profile-stats-card {
+        background: #242526;
+      }
+
+      body.dark-mode .friend-card {
+        background: #242526;
+        border-color: #3a3b3c;
+      }
+
+      /* ── Navbar ───────────────────────────────────────────── */
+      .navbar {
+        background-color: #1877f2 !important;
+      }
+
+      .navbar-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        color: white;
+      }
+
+      .navbar-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.12);
+      }
+
+      /* ── Cover Photo ──────────────────────────────────────── */
+      .cover-photo-wrap {
+        position: relative;
+        height: 340px;
+        background: url("https://picsum.photos/1200/340?random=10") center/cover
+          no-repeat;
+        border-radius: 0 0 12px 12px;
+        overflow: hidden;
+      }
+
+      .cover-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 50%,
+          rgba(0, 0, 0, 0.45)
+        );
+      }
+
+      .cover-edit-btn {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .cover-edit-btn:hover {
+        background: #fff;
+      }
+
+      /* ── Profile Picture ──────────────────────────────────── */
+      .profile-pic-wrap {
+        position: relative;
+        display: inline-block;
+      }
+
+      .profile-pic {
+        width: 168px;
+        height: 168px;
+        border-radius: 50%;
+        border: 4px solid white;
+        object-fit: cover;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        transition:
+          box-shadow 0.3s,
+          transform 0.3s;
+      }
+
+      .profile-pic:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        transform: scale(1.03);
+      }
+
+      .profile-pic-edit {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 36px;
+        height: 36px;
+        background: #e4e6eb;
+        border: 2px solid white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+      }
+
+      .profile-pic-edit:hover {
+        background: #ccd0d5;
+      }
+
+      /* ── Profile Header ───────────────────────────────────── */
+      .profile-header-card {
+        border-radius: 0 0 12px 12px;
+        border: none;
+        padding-bottom: 0;
+      }
+
+      .profile-name {
+        font-size: 1.9rem;
+        font-weight: 700;
+      }
+
+      .profile-bio {
+        font-size: 0.95rem;
+        color: #65676b;
+      }
+
+      /* ── Stats Row ────────────────────────────────────────── */
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-num {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1877f2;
+      }
+
+      .stat-lbl {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #65676b;
+        letter-spacing: 0.05em;
+      }
+
+      /* ── Tab Navigation ───────────────────────────────────── */
+      .profile-tabs {
+        border-bottom: 2px solid #e4e6eb;
+      }
+
+      .profile-tabs .nav-link {
+        font-weight: 600;
+        color: #65676b;
+        padding: 12px 20px;
+        border: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 0;
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+      }
+
+      .profile-tabs .nav-link:hover {
+        color: #1877f2;
+        background: #f0f2f5;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .profile-tabs .nav-link.active {
+        color: #1877f2;
+        border-bottom: 3px solid #1877f2;
+      }
+
+      /* ── Post Card ────────────────────────────────────────── */
+      .post-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 16px;
+        transition: box-shadow 0.2s;
+      }
+
+      .post-card:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      }
+
+      .like-btn.liked {
+        color: #1877f2;
+        font-weight: 600;
+      }
+
+      @keyframes like-pop {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.5);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .like-btn.liked i {
+        animation: like-pop 0.3s ease;
+      }
+
+      /* ── Comment Section ──────────────────────────────────── */
+      .comment-section {
+        display: none;
+        padding: 8px 16px 12px;
+        border-top: 1px solid #e4e6eb;
+        animation: slideDown 0.25s ease;
+      }
+
+      .comment-section.open {
+        display: block;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .comment-bubble {
+        background: #f0f2f5;
+        border-radius: 16px;
+        padding: 8px 12px;
+        margin-bottom: 6px;
+        font-size: 0.875rem;
+      }
+
+      .comment-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .comment-input-wrap input {
+        border-radius: 20px;
+        background: #f0f2f5;
+        border: none;
+        padding: 8px 14px;
+        flex: 1;
+      }
+
+      .comment-input-wrap input:focus {
+        background: #e4e6eb;
+        outline: none;
+        box-shadow: none;
+      }
+
+      /* ── About Section ────────────────────────────────────── */
+      .about-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #e4e6eb;
+      }
+
+      .about-item:last-child {
+        border-bottom: none;
+      }
+
+      .about-item i {
+        width: 30px;
+        text-align: center;
+        font-size: 1.1rem;
+        color: #1877f2;
+      }
+
+      /* ── Friends Grid ─────────────────────────────────────── */
+      .friend-card {
+        border: 1px solid #e4e6eb;
+        border-radius: 12px;
+        overflow: hidden;
+        text-align: center;
+        padding-bottom: 10px;
+        cursor: pointer;
+        transition:
+          box-shadow 0.2s,
+          transform 0.2s;
+        background: white;
+      }
+
+      .friend-card:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        transform: translateY(-3px);
+      }
+
+      .friend-card img {
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+      }
+
+      .friend-card .fname {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-top: 6px;
+        padding: 0 6px;
+      }
+
+      /* ── Photos Grid ──────────────────────────────────────── */
+      .photo-thumb {
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+      }
+
+      .photo-thumb:hover {
+        transform: scale(1.04);
+        opacity: 0.88;
+      }
+
+      .photo-thumb img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* ── Toast ────────────────────────────────────────────── */
+      #toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .fb-toast {
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        animation: toastIn 0.3s ease;
+        min-width: 220px;
+      }
+
+      .fb-toast.success {
+        border-left: 4px solid #42b72a;
+      }
+
+      .fb-toast.info {
+        border-left: 4px solid #1877f2;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* ── Responsive ───────────────────────────────────────── */
+      @media (max-width: 768px) {
+        .cover-photo-wrap {
+          height: 200px;
+        }
+
+        .profile-pic {
+          width: 110px;
+          height: 110px;
+        }
+
+        .profile-name {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark fixed-top shadow-sm px-3">
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="fab fa-facebook fa-lg me-1"></i> Facebook
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <div
+          class="navbar-icon-btn"
+          onclick="toggleDarkMode()"
+          title="Toggle Dark Mode"
+          id="darkModeToggle"
+        >
+          <i class="fas fa-moon"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Notifications"
+          onclick="showToast('No new notifications', 'info')"
+        >
+          <i class="fas fa-bell"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Home"
+          onclick="window.location.href = 'index.html'"
+        >
+          <i class="fas fa-home"></i>
+        </div>
+        <img
+          src="https://ui-avatars.com/api/?name=Sriyans&amp;background=random"
+          class="rounded-circle"
+          width="36"
+          height="36"
+          id="navbar-user-img"
+          style="cursor: pointer; border: 2px solid white"
+          alt="Profile"
+        />
+      </div>
+    </nav>
+
+    <!-- ── Main Content ─── -->
+    <div style="padding-top: 56px">
+      <!-- Cover + Profile Picture -->
+      <div class="cover-photo-wrap" id="coverPhotoWrap">
+        <div class="cover-overlay"></div>
+        <button
+          class="cover-edit-btn"
+          onclick="showToast('Cover photo editor coming soon!', 'info')"
+        >
+          <i class="fas fa-camera me-1"></i> Edit Cover Photo
+        </button>
+      </div>
+
+      <!-- Profile Info Card -->
+      <div class="container" style="max-width: 940px">
+        <div class="card profile-header-card shadow-sm mb-0">
+          <div class="card-body pb-0">
+            <!-- Avatar + Name Row -->
+            <div
+              class="d-flex flex-column flex-md-row align-items-center align-items-md-end gap-3"
+              style="margin-top: -70px"
+            >
+              <div class="profile-pic-wrap">
+                <img
+                  id="profilePicLarge"
+                  src="https://ui-avatars.com/api/?name=Sriyans&amp;background=random&amp;size=200"
+                  class="profile-pic"
+                  alt="Profile Picture"
+                />
+                <div
+                  class="profile-pic-edit"
+                  onclick="showToast('Photo upload coming soon!', 'info')"
+                >
+                  <i class="fas fa-camera"></i>
+                </div>
+              </div>
+              <div
+                class="flex-grow-1 text-center text-md-start"
+                style="margin-bottom: 8px"
+              >
+                <h1 class="profile-name mb-0" id="profileName">Sriyans</h1>
+                <p class="profile-bio mt-1 mb-0" id="profileBio">
+                  Living life one day at a time.
+                </p>
+                <p class="text-muted mt-1 mb-0 small" id="profileLocation">
+                  <i class="fas fa-map-marker-alt me-1 text-primary"></i>New
+                  York, USA
+                </p>
+              </div>
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2 mb-2">
+                <button
+                  class="btn btn-primary px-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editProfileModal"
+                >
+                  <i class="fas fa-edit me-1"></i> Edit Profile
+                </button>
+                <button
+                  class="btn btn-light px-3"
+                  onclick="showToast('More options', 'info')"
+                >
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+              </div>
+            </div>
+
+            <hr class="mb-2" />
+
+            <!-- Stats Row -->
+            <div class="row text-center mb-2 mt-1" id="statsRow">
+              <div class="col-3 stat-item">
+                <div class="stat-num" id="stat-posts">12</div>
+                <div class="stat-lbl">Posts</div>
+              </div>
+              <div class="col-3 stat-item">
+                <div class="stat-num">340</div>
+                <div class="stat-lbl">Friends</div>
+              </div>
+              <div class="col-3 stat-item">
+                <div class="stat-num">1.2K</div>
+                <div class="stat-lbl">Followers</div>
+              </div>
+              <div class="col-3 stat-item">
+                <div class="stat-num">87</div>
+                <div class="stat-lbl">Photos</div>
+              </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <ul class="nav profile-tabs mt-2" id="profileTabs">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="#"
+                  onclick="
+                    showTab('posts', this);
+                    return false;
+                  "
+                  >Posts</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#"
+                  onclick="
+                    showTab('about', this);
+                    return false;
+                  "
+                  >About</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#"
+                  onclick="
+                    showTab('friends', this);
+                    return false;
+                  "
+                  >Friends</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#"
+                  onclick="
+                    showTab('photos', this);
+                    return false;
+                  "
+                  >Photos</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ── Tab Content ─── -->
+        <div class="row mt-3 g-3">
+          <!-- LEFT SIDEBAR (About + Photos quick view) -->
+          <div class="col-md-5 d-none d-md-block">
+            <!-- About Card -->
+            <div class="card border-0 shadow-sm mb-3">
+              <div class="card-body">
+                <h6 class="fw-bold mb-3">Intro</h6>
+                <div class="about-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span id="intro-location"
+                    >Lives in <strong>New York, USA</strong></span
+                  >
+                </div>
+                <div class="about-item">
+                  <i class="fas fa-graduation-cap"></i>
+                  <span>Studied at <strong>State University</strong></span>
+                </div>
+                <div class="about-item">
+                  <i class="fas fa-briefcase"></i>
+                  <span>Works at <strong>Tech Corp</strong></span>
+                </div>
+                <div class="about-item">
+                  <i class="fas fa-heart"></i>
+                  <span>Single</span>
+                </div>
+                <div class="about-item">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>Joined <strong>January 2020</strong></span>
+                </div>
+                <button
+                  class="btn btn-light w-100 mt-2 fw-semibold"
+                  onclick="showTab('about', null)"
+                >
+                  See Full About
+                </button>
+              </div>
+            </div>
+
+            <!-- Photos Preview Card -->
+            <div class="card border-0 shadow-sm mb-3">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3"
+                >
+                  <h6 class="fw-bold mb-0">Photos</h6>
+                  <a
+                    href="#"
+                    class="text-primary small fw-semibold"
+                    onclick="
+                      showTab('photos', null);
+                      return false;
+                    "
+                    >See All Photos</a
+                  >
+                </div>
+                <div class="row g-1" id="photosPreview"></div>
+              </div>
+            </div>
+
+            <!-- Friends Preview Card -->
+            <div class="card border-0 shadow-sm mb-3">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3"
+                >
+                  <h6 class="fw-bold mb-0">
+                    Friends <span class="text-muted fw-normal">· 340</span>
+                  </h6>
+                  <a
+                    href="#"
+                    class="text-primary small fw-semibold"
+                    onclick="
+                      showTab('friends', null);
+                      return false;
+                    "
+                    >See All Friends</a
+                  >
+                </div>
+                <div class="row g-2" id="friendsPreview"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT MAIN (Tab-based content) -->
+          <div class="col-md-7">
+            <!-- POSTS TAB -->
+            <div id="tab-posts">
+              <!-- Create Post Mini -->
+              <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body d-flex align-items-center gap-2">
+                  <img
+                    id="create-post-avatar"
+                    src="https://ui-avatars.com/api/?name=Sriyans&amp;background=random"
+                    class="rounded-circle"
+                    width="40"
+                    height="40"
+                    alt="You"
+                  />
+                  <input
+                    type="text"
+                    class="form-control rounded-pill bg-light border-0"
+                    placeholder="What's on your mind?"
+                    id="quickPostInput"
+                    onclick="
+                      document.getElementById('quickPostBtn').style.display =
+                        'block'
+                    "
+                  />
+                </div>
+                <div id="quickPostBtn" class="px-3 pb-3" style="display: none">
+                  <button
+                    class="btn btn-primary btn-sm px-4"
+                    onclick="quickPost()"
+                  >
+                    Post
+                  </button>
+                  <button
+                    class="btn btn-light btn-sm ms-2"
+                    onclick="
+                      document.getElementById('quickPostBtn').style.display =
+                        'none'
+                    "
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              <!-- Dynamic post feed -->
+              <div id="profile-feed"></div>
+            </div>
+
+            <!-- ABOUT TAB (hidden initially) -->
+            <div id="tab-about" style="display: none">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                  <h5 class="fw-bold mb-3">About</h5>
+                  <div class="about-item">
+                    <i class="fas fa-user"></i
+                    ><span id="about-name">sriyans</span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-map-marker-alt"></i
+                    ><span id="about-location">New York, USA</span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-info-circle"></i
+                    ><span id="about-bio">Living life one day at a time.</span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-graduation-cap"></i
+                    ><span>Studied at <strong>State University</strong></span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-briefcase"></i
+                    ><span>Works at <strong>Tech Corp</strong></span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-heart"></i><span>Single</span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-envelope"></i
+                    ><span>sriyans@example.com</span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-phone"></i><span>+1 (555) 000-0000</span>
+                  </div>
+                  <div class="about-item">
+                    <i class="fas fa-calendar-alt"></i
+                    ><span>Joined <strong>January 2020</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FRIENDS TAB (hidden initially) -->
+            <div id="tab-friends" style="display: none">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                  <h5 class="fw-bold mb-3">
+                    Friends · <span class="text-muted fw-normal">340</span>
+                  </h5>
+                  <div class="row g-3" id="friendsGrid"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PHOTOS TAB (hidden initially) -->
+            <div id="tab-photos" style="display: none">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                  <h5 class="fw-bold mb-3">Photos</h5>
+                  <div class="row g-2" id="photosGrid"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- end container -->
+    </div>
+    <!-- end padding-top -->
+
+    <!-- ── Edit Profile Modal ─────────────────────────────── -->
+    <div
+      class="modal fade"
+      id="editProfileModal"
+      tabindex="-1"
+      aria-labelledby="editProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="profileForm">
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="userNameInput"
+                  placeholder="Your name"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Location</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="userLocationInput"
+                  placeholder="Your city, country"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Bio</label>
+                <textarea
+                  class="form-control"
+                  id="userBioInput"
+                  rows="3"
+                  placeholder="Write something about yourself..."
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" onclick="saveProfile()">
+              <i class="fas fa-save me-1"></i> Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      /* ══════════════════════════════════════════════════════════
+           Profile Page Script
+        ══════════════════════════════════════════════════════════ */
+
+      // ── Default profile data ───────────────────────────────────
+      let profile = {
+        name: "Sriyans",
+        location: "New York, USA",
+        bio: "Living life one day at a time.",
+      };
+
+      // Sample posts for the profile page
+      const myPosts = [
+        {
+          id: 101,
+          text: "Just updated my profile! 🎉",
+          time: "1 hour ago",
+          image: null,
+          likes: 8,
+          comments: [],
+        },
+        {
+          id: 102,
+          text: "Had an amazing day coding! 💻 #WebDev",
+          time: "3 hours ago",
+          image: "https://picsum.photos/600/300?random=20",
+          likes: 22,
+          comments: [{ user: "Alex", text: "Keep it up!" }],
+        },
+        {
+          id: 103,
+          text: "Reading Atomic Habits 📚 — highly recommend!",
+          time: "1 day ago",
+          image: null,
+          likes: 35,
+          comments: [{ user: "Priya", text: "Great book!" }],
+        },
+      ];
+
+      const likedPosts = new Set();
+
+      const friends = [
+        { name: "Alex", img: 11 },
+        { name: "Priya", img: 12 },
+        { name: "Raj", img: 13 },
+        { name: "Sara", img: 14 },
+        { name: "Meera", img: 15 },
+        { name: "Arjun", img: 16 },
+        { name: "Neha", img: 17 },
+        { name: "Dev", img: 18 },
+        { name: "Tanya", img: 19 },
+      ];
+
+      // ── Load profile from localStorage (saved by index.html) ──
+      function loadProfile() {
+        const saved = localStorage.getItem("fbProfile");
+        if (saved) profile = JSON.parse(saved);
+        applyProfile();
+      }
+
+      function applyProfile() {
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=random&size=200`;
+
+        document.getElementById("profileName").textContent = profile.name;
+        document.getElementById("profileBio").textContent = profile.bio;
+        document.getElementById("profileLocation").innerHTML =
+          `<i class="fas fa-map-marker-alt me-1 text-primary"></i>${profile.location}`;
+        document.getElementById("profilePicLarge").src = avatarUrl;
+        document.getElementById("navbar-user-img").src =
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=random`;
+        document.getElementById("create-post-avatar").src =
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=random`;
+
+        // About tab fields
+        document.getElementById("about-name").textContent = profile.name;
+        document.getElementById("about-location").textContent =
+          profile.location;
+        document.getElementById("about-bio").textContent = profile.bio;
+        document.getElementById("intro-location").innerHTML =
+          `Lives in <strong>${profile.location}</strong>`;
+
+        // Pre-fill modal inputs
+        document.getElementById("userNameInput").value = profile.name;
+        document.getElementById("userLocationInput").value = profile.location;
+        document.getElementById("userBioInput").value = profile.bio;
+      }
+
+      // ── Save Profile ───────────────────────────────────────────
+      function saveProfile() {
+        const name = document.getElementById("userNameInput").value.trim();
+        const location = document
+          .getElementById("userLocationInput")
+          .value.trim();
+        const bio = document.getElementById("userBioInput").value.trim();
+
+        if (!name) {
+          showToast("Name cannot be empty!", "info");
+          return;
+        }
+
+        profile = { name, location, bio };
+        localStorage.setItem("fbProfile", JSON.stringify(profile));
+        applyProfile();
+
+        // Update post avatars
+        document.querySelectorAll(".comment-avatar").forEach((img) => {
+          img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+        });
+
+        bootstrap.Modal.getInstance(
+          document.getElementById("editProfileModal"),
+        ).hide();
+        showToast(`Profile updated! Welcome, ${name} 👋`, "success");
+      }
+
+      // ── Tab Switching ──────────────────────────────────────────
+      function showTab(tabName, clickedLink) {
+        ["posts", "about", "friends", "photos"].forEach((t) => {
+          document.getElementById(`tab-${t}`).style.display =
+            t === tabName ? "block" : "none";
+        });
+        if (clickedLink) {
+          document
+            .querySelectorAll("#profileTabs .nav-link")
+            .forEach((l) => l.classList.remove("active"));
+          clickedLink.classList.add("active");
+        }
+      }
+
+      // ── Render Profile Feed ────────────────────────────────────
+      function renderFeed() {
+        const feed = document.getElementById("profile-feed");
+        feed.innerHTML = myPosts.map((post) => buildPostCard(post)).join("");
+        document.getElementById("stat-posts").textContent = myPosts.length;
+      }
+
+      function buildPostCard(post) {
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=random`;
+        const imgHtml = post.image
+          ? `<img src="${post.image}" class="img-fluid w-100" alt="">`
+          : "";
+        const commentsHtml = post.comments
+          .map(
+            (c) =>
+              `<div class="comment-bubble"><strong>${c.user}:</strong> ${c.text}</div>`,
+          )
+          .join("");
+
+        return `
+        <div class="card post-card mb-3">
+            <div class="card-header bg-white border-0 d-flex align-items-center">
+                <img src="${avatarUrl}" class="rounded-circle me-2" width="40" height="40" alt="">
+                <div>
+                    <h6 class="mb-0 fw-bold" id="post-author-${post.id}">${profile.name}</h6>
+                    <small class="text-muted">${post.time} <i class="fas fa-globe-americas"></i></small>
+                </div>
+                <i class="fas fa-ellipsis-h ms-auto text-muted" style="cursor:pointer;"></i>
+            </div>
+            <div class="card-body p-0">
+                <p class="px-3 pt-3">${post.text}</p>
+                ${imgHtml}
+            </div>
+            <div class="card-footer bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                    <div style="cursor:pointer;" onclick="toggleLike(${post.id})">
+                        <i class="fas fa-thumbs-up text-primary me-1"></i>
+                        <span id="like-count-${post.id}">${post.likes}</span>
+                    </div>
+                    <div class="text-muted small" style="cursor:pointer;" onclick="toggleComments(${post.id})">
+                        ${post.comments.length} Comment${post.comments.length !== 1 ? "s" : ""}
+                    </div>
+                </div>
+                <hr class="my-1">
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-light flex-grow-1 like-btn" id="like-btn-${post.id}" onclick="toggleLike(${post.id})">
+                        <i class="far fa-thumbs-up"></i> Like
+                    </button>
+                    <button class="btn btn-light flex-grow-1" onclick="toggleComments(${post.id})">
+                        <i class="far fa-comment-alt"></i> Comment
+                    </button>
+                    <button class="btn btn-light flex-grow-1" onclick="showToast('Link copied!', 'success')">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+                <div class="comment-section" id="comments-${post.id}">
+                    <div id="comments-list-${post.id}">${commentsHtml}</div>
+                    <div class="comment-input-wrap mt-2">
+                        <img src="${avatarUrl}" class="rounded-circle comment-avatar" width="32" height="32" alt="">
+                        <input type="text" class="form-control" placeholder="Write a comment…"
+                               id="comment-input-${post.id}"
+                               onkeydown="submitComment(event, ${post.id})">
+                        <i class="fas fa-paper-plane text-primary" style="cursor:pointer; font-size:1.1rem;"
+                           onclick="submitComment({key:'Enter'}, ${post.id})"></i>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+      }
+
+      // ── Like ───────────────────────────────────────────────────
+      function toggleLike(postId) {
+        const btn = document.getElementById(`like-btn-${postId}`);
+        const count = document.getElementById(`like-count-${postId}`);
+        let n = parseInt(count.textContent);
+        if (likedPosts.has(postId)) {
+          likedPosts.delete(postId);
+          btn.classList.remove("liked");
+          btn.innerHTML = '<i class="far fa-thumbs-up"></i> Like';
+          count.textContent = n - 1;
+        } else {
+          likedPosts.add(postId);
+          btn.classList.add("liked");
+          btn.innerHTML = '<i class="fas fa-thumbs-up text-primary"></i> Liked';
+          count.textContent = n + 1;
+          showToast("You liked this post!", "success");
+        }
+      }
+
+      // ── Comment ────────────────────────────────────────────────
+      function toggleComments(postId) {
+        const section = document.getElementById(`comments-${postId}`);
+        section.classList.toggle("open");
+        if (section.classList.contains("open"))
+          document.getElementById(`comment-input-${postId}`).focus();
+      }
+
+      function submitComment(e, postId) {
+        if (e.key !== "Enter") return;
+        const input = document.getElementById(`comment-input-${postId}`);
+        const text = input.value.trim();
+        if (!text) return;
+        document
+          .getElementById(`comments-list-${postId}`)
+          .insertAdjacentHTML(
+            "beforeend",
+            `<div class="comment-bubble" style="animation:slideDown .2s ease"><strong>${profile.name}:</strong> ${text}</div>`,
+          );
+        input.value = "";
+        showToast("Comment posted!", "success");
+      }
+
+      // ── Quick Post ─────────────────────────────────────────────
+      function quickPost() {
+        const text = document.getElementById("quickPostInput").value.trim();
+        if (!text) {
+          showToast("Write something first!", "info");
+          return;
+        }
+        const newPost = {
+          id: Date.now(),
+          text,
+          time: "Just now",
+          image: null,
+          likes: 0,
+          comments: [],
+        };
+        myPosts.unshift(newPost);
+        renderFeed();
+        document.getElementById("quickPostInput").value = "";
+        document.getElementById("quickPostBtn").style.display = "none";
+        showToast("Post shared!", "success");
+      }
+
+      // ── Friends Grid ───────────────────────────────────────────
+      function renderFriends() {
+        const html = friends
+          .map(
+            (f) => `
+            <div class="col-4">
+                <div class="friend-card" onclick="showToast('Viewing ${f.name}\\'s profile...', 'info')">
+                    <img src="https://picsum.photos/120/110?random=${f.img}" alt="${f.name}">
+                    <div class="fname">${f.name}</div>
+                </div>
+            </div>`,
+          )
+          .join("");
+
+        document.getElementById("friendsGrid").innerHTML = html;
+        document.getElementById("friendsPreview").innerHTML = friends
+          .slice(0, 6)
+          .map(
+            (f) => `
+            <div class="col-4">
+                <div class="friend-card" onclick="showToast('Viewing ${f.name}\\'s profile...', 'info')">
+                    <img src="https://picsum.photos/120/110?random=${f.img}" alt="${f.name}">
+                    <div class="fname">${f.name}</div>
+                </div>
+            </div>`,
+          )
+          .join("");
+      }
+
+      // ── Photos Grid ────────────────────────────────────────────
+      function renderPhotos() {
+        const photoNums = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        const html = photoNums
+          .map(
+            (n) => `
+            <div class="col-4">
+                <div class="photo-thumb" onclick="showToast('Opening photo...', 'info')">
+                    <img src="https://picsum.photos/150/130?random=${n}" alt="photo">
+                </div>
+            </div>`,
+          )
+          .join("");
+
+        document.getElementById("photosGrid").innerHTML = html;
+        document.getElementById("photosPreview").innerHTML = photoNums
+          .slice(0, 9)
+          .map(
+            (n) => `
+            <div class="col-4">
+                <div class="photo-thumb" onclick="showToast('Opening photo...', 'info')">
+                    <img src="https://picsum.photos/150/130?random=${n}" alt="photo">
+                </div>
+            </div>`,
+          )
+          .join("");
+      }
+
+      // ── Dark Mode ──────────────────────────────────────────────
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        const icon = document.querySelector("#darkModeToggle i");
+        if (document.body.classList.contains("dark-mode")) {
+          icon.className = "fas fa-sun";
+          showToast("Dark mode on 🌙", "info");
+        } else {
+          icon.className = "fas fa-moon";
+          showToast("Light mode on ☀️", "info");
+        }
+      }
+
+      // ── Toast ──────────────────────────────────────────────────
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `fb-toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          toast.style.transition = "opacity 0.4s";
+          setTimeout(() => toast.remove(), 400);
+        }, 2500);
+      }
+
+      // ── Init ───────────────────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProfile();
+        renderFeed();
+        renderFriends();
+        renderPhotos();
+      });
+    </script>
+  </body>
+</html>

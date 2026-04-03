@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groups – Facebook Style</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      body.dark-mode {
+        background: #18191a;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .sidebar-nav,
+      body.dark-mode .card,
+      body.dark-mode .group-card {
+        background: #242526 !important;
+        border-color: #3a3b3c !important;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .nav-item-btn:hover,
+      body.dark-mode .nav-item-btn.active {
+        background: #3a3b3c !important;
+      }
+
+      body.dark-mode .search-bar input {
+        background: #3a3b3c;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .text-muted {
+        color: #b0b3b8 !important;
+      }
+
+      body.dark-mode .btn-light {
+        background: #3a3b3c;
+        color: #e4e6eb;
+        border-color: #555;
+      }
+
+      body.dark-mode .post-compose {
+        background: #242526;
+        border-color: #3a3b3c;
+      }
+
+      .navbar {
+        background: #1877f2 !important;
+      }
+
+      .navbar-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+
+      .navbar-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.12);
+      }
+
+      .page-wrap {
+        display: flex;
+        margin-top: 56px;
+        min-height: calc(100vh - 56px);
+      }
+
+      /* Sidebar */
+      .sidebar-nav {
+        width: 340px;
+        flex-shrink: 0;
+        background: white;
+        border-right: 1px solid #e4e6eb;
+        padding: 12px 8px;
+        position: sticky;
+        top: 56px;
+        height: calc(100vh - 56px);
+        overflow-y: auto;
+      }
+
+      .sidebar-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        padding: 8px 12px;
+      }
+
+      .search-bar {
+        padding: 4px 8px 10px;
+      }
+
+      .search-bar input {
+        width: 100%;
+        border: none;
+        background: #f0f2f5;
+        border-radius: 20px;
+        padding: 8px 14px;
+        outline: none;
+        font-size: 0.88rem;
+      }
+
+      .nav-item-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.92rem;
+        transition: background 0.15s;
+      }
+
+      .nav-item-btn:hover {
+        background: #f0f2f5;
+      }
+
+      .nav-item-btn.active {
+        background: #e7f3ff;
+        color: #1877f2;
+        font-weight: 700;
+      }
+
+      .nav-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+        background: #e4e6eb;
+      }
+
+      .sec-lbl {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #65676b;
+        padding: 10px 12px 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      /* Main */
+      .main-content {
+        flex: 1;
+        padding: 20px 24px;
+        overflow-y: auto;
+        max-width: 860px;
+      }
+
+      .section-heading {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+
+      /* Create Group CTA */
+      .create-group-cta {
+        background: linear-gradient(135deg, #1877f2, #42b0f5);
+        border-radius: 14px;
+        color: white;
+        padding: 20px 22px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .create-group-cta .cta-icon {
+        width: 52px;
+        height: 52px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .create-group-cta h6 {
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin: 0 0 4px;
+      }
+
+      .create-group-cta p {
+        margin: 0;
+        font-size: 0.88rem;
+        opacity: 0.88;
+      }
+
+      .btn-create-group {
+        background: white;
+        color: #1877f2;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+      }
+
+      .btn-create-group:hover {
+        background: #f0f2f5;
+      }
+
+      /* Group card */
+      .group-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition:
+          box-shadow 0.2s,
+          transform 0.2s;
+        cursor: pointer;
+        background: white;
+      }
+
+      .group-card:hover {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+        transform: translateY(-3px);
+      }
+
+      .group-cover {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .group-card .card-body {
+        padding: 10px 12px 12px;
+      }
+
+      .group-name {
+        font-weight: 700;
+        font-size: 0.92rem;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .group-meta {
+        font-size: 0.78rem;
+        color: #65676b;
+        margin-bottom: 10px;
+      }
+
+      .btn-join {
+        width: 100%;
+        background: #e7f3ff;
+        color: #1877f2;
+        border: none;
+        border-radius: 8px;
+        padding: 7px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-join:hover {
+        background: #dce8fd;
+      }
+
+      .btn-join.joined {
+        background: #e4e6eb;
+        color: #050505;
+      }
+
+      /* Group Feed Post */
+      .post-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 14px;
+        transition: box-shadow 0.2s;
+        background: white;
+      }
+
+      .post-card:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      }
+
+      .like-btn.liked i {
+        color: #1877f2;
+        animation: likePop 0.3s ease;
+      }
+
+      @keyframes likePop {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.5);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Create Group Modal */
+      .privacy-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border: 2px solid #e4e6eb;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-bottom: 8px;
+        transition: border-color 0.2s;
+      }
+
+      .privacy-option.selected {
+        border-color: #1877f2;
+        background: #e7f3ff;
+      }
+
+      .privacy-option .priv-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+
+      #toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .fb-toast {
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        animation: toastIn 0.3s ease;
+        min-width: 200px;
+      }
+
+      .fb-toast.success {
+        border-left: 4px solid #42b72a;
+      }
+
+      .fb-toast.info {
+        border-left: 4px solid #1877f2;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .group-card,
+      .post-card {
+        animation: fadeUp 0.25s ease;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar-nav {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="toast-container"></div>
+
+    <nav
+      class="navbar navbar-dark fixed-top shadow-sm px-3 d-flex align-items-center justify-content-between"
+    >
+      <a class="navbar-brand fw-bold" href="index.html"
+        ><i class="fab fa-facebook fa-lg me-1"></i> Facebook</a
+      >
+      <div class="d-flex align-items-center gap-2">
+        <div
+          class="navbar-icon-btn"
+          onclick="toggleDarkMode()"
+          id="darkModeToggle"
+          title="Toggle Dark Mode"
+        >
+          <i class="fas fa-moon"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          onclick="window.location.href = 'index.html'"
+          title="Home"
+        >
+          <i class="fas fa-home"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          onclick="window.location.href = 'notifications.html'"
+          title="Notifications"
+        >
+          <i class="fas fa-bell"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          onclick="window.location.href = 'messages.html'"
+          title="Messages"
+        >
+          <i class="fab fa-facebook-messenger"></i>
+        </div>
+        <img
+          src="https://ui-avatars.com/api/?name=sriyans&amp;background=random"
+          id="navbar-user-img"
+          class="rounded-circle"
+          width="36"
+          height="36"
+          onclick="window.location.href = 'profile.html'"
+          title="Profile"
+          style="cursor: pointer; border: 2px solid white"
+          alt="Profile"
+        />
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+      <!-- Sidebar -->
+      <div class="sidebar-nav">
+        <div class="sidebar-title">
+          <i class="fas fa-users text-primary me-2"></i>Groups
+        </div>
+        <div class="search-bar">
+          <input
+            type="text"
+            id="groupSearch"
+            placeholder="Search groups"
+            oninput="searchGroups(this.value)"
+          />
+        </div>
+        <button
+          class="btn btn-primary w-100 mb-2"
+          style="border-radius: 8px; font-weight: 700"
+          onclick="openCreateModal()"
+        >
+          <i class="fas fa-plus me-2"></i>Create New Group
+        </button>
+        <div class="sec-lbl">Browse</div>
+        <div class="nav-item-btn active" onclick="switchSection('feed', this)">
+          <div class="nav-icon" style="background: #e7f3ff; color: #1877f2">
+            <i class="fas fa-stream"></i>
+          </div>
+          Your Feed
+        </div>
+        <div class="nav-item-btn" onclick="switchSection('your', this)">
+          <div class="nav-icon" style="background: #e7f3ff; color: #1877f2">
+            <i class="fas fa-users"></i>
+          </div>
+          Your Groups
+        </div>
+        <div class="nav-item-btn" onclick="switchSection('discover', this)">
+          <div class="nav-icon" style="background: #e7f3ff; color: #1877f2">
+            <i class="fas fa-compass"></i>
+          </div>
+          Discover
+        </div>
+        <div class="sec-lbl mt-1">Groups You Manage</div>
+        <div id="managedList"></div>
+      </div>
+
+      <!-- Main -->
+      <div class="main-content">
+        <!-- Feed Section -->
+        <div id="section-feed">
+          <div class="section-heading">Group Activity</div>
+          <div id="groupFeed"></div>
+        </div>
+
+        <!-- Your Groups -->
+        <div id="section-your" style="display: none">
+          <div class="section-heading">Groups You've Joined</div>
+          <div class="row g-3" id="yourGroupsGrid"></div>
+        </div>
+
+        <!-- Discover -->
+        <div id="section-discover" style="display: none">
+          <div class="create-group-cta">
+            <div class="cta-icon"><i class="fas fa-users"></i></div>
+            <div class="flex-grow-1">
+              <h6>Start a Community</h6>
+              <p>Connect people who share your passion.</p>
+            </div>
+            <button class="btn-create-group" onclick="openCreateModal()">
+              + Create Group
+            </button>
+          </div>
+          <div class="section-heading">Suggested Groups</div>
+          <div class="row g-3" id="discoverGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div
+      class="modal fade"
+      id="createGroupModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Create New Group</h5>
+            <button
+              class="btn-close"
+              data-bs-dismiss="modal"
+              title="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Group Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="groupNameInput"
+                placeholder="Enter group name"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Choose Privacy</label>
+              <div
+                class="privacy-option selected"
+                onclick="selectPrivacy('public', this)"
+              >
+                <div
+                  class="priv-icon"
+                  style="background: #e7f3ff; color: #1877f2"
+                >
+                  <i class="fas fa-globe"></i>
+                </div>
+                <div>
+                  <div class="fw-bold">Public</div>
+                  <small class="text-muted"
+                    >Anyone can see the group &amp; its posts.</small
+                  >
+                </div>
+              </div>
+              <div
+                class="privacy-option"
+                onclick="selectPrivacy('private', this)"
+              >
+                <div class="priv-icon" style="background: #f0f2f5; color: #444">
+                  <i class="fas fa-lock"></i>
+                </div>
+                <div>
+                  <div class="fw-bold">Private</div>
+                  <small class="text-muted">Only members can see posts.</small>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Category</label>
+              <select class="form-select" id="groupCategory">
+                <option>Technology</option>
+                <option>Sports</option>
+                <option>Education</option>
+                <option>Hobbies</option>
+                <option>Gaming</option>
+                <option>Travel</option>
+                <option>Food</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" onclick="createGroup()">
+              <i class="fas fa-plus me-1"></i>Create
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let selectedPrivacy = "public";
+      const joinedGroups = new Set([1, 2, 3]);
+      const likedPosts = new Set();
+
+      const groupsData = [
+        {
+          id: 1,
+          name: "Web Developers Community",
+          members: "45.2K",
+          posts: 12,
+          cover: 300,
+          category: "Technology",
+          privacy: "public",
+          managed: true,
+        },
+        {
+          id: 2,
+          name: "Photography Enthusiasts",
+          members: "28.1K",
+          posts: 8,
+          cover: 301,
+          category: "Hobbies",
+          privacy: "public",
+          managed: false,
+        },
+        {
+          id: 3,
+          name: "Fitness & Health Goals",
+          members: "61.5K",
+          posts: 20,
+          cover: 302,
+          category: "Sports",
+          privacy: "private",
+          managed: true,
+        },
+        {
+          id: 4,
+          name: "Travel Buddies 🌍",
+          members: "34.8K",
+          posts: 5,
+          cover: 303,
+          category: "Travel",
+          privacy: "public",
+          managed: false,
+        },
+        {
+          id: 5,
+          name: "Foodies United 🍕",
+          members: "19.3K",
+          posts: 14,
+          cover: 304,
+          category: "Food",
+          privacy: "public",
+          managed: false,
+        },
+        {
+          id: 6,
+          name: "Gaming Legends",
+          members: "82.4K",
+          posts: 30,
+          cover: 305,
+          category: "Gaming",
+          privacy: "public",
+          managed: false,
+        },
+        {
+          id: 7,
+          name: "Book Club 📚",
+          members: "11.2K",
+          posts: 6,
+          cover: 306,
+          category: "Education",
+          privacy: "private",
+          managed: false,
+        },
+        {
+          id: 8,
+          name: "Startup Founders Network",
+          members: "22.9K",
+          posts: 9,
+          cover: 307,
+          category: "Technology",
+          privacy: "private",
+          managed: false,
+        },
+      ];
+
+      const feedPosts = [
+        {
+          id: 1,
+          group: "Web Developers Community",
+          groupId: 1,
+          user: "Priya M",
+          seed: 10,
+          text: "Just built my first React app! 💻 Took 3 days but totally worth it.",
+          time: "2 hrs ago",
+          likes: 34,
+          comments: 5,
+        },
+        {
+          id: 2,
+          group: "Fitness & Health Goals",
+          groupId: 3,
+          user: "Arjun P",
+          seed: 11,
+          text: "Day 30 of my no-sugar challenge complete! 💪 Feeling amazing!",
+          time: "4 hrs ago",
+          likes: 78,
+          comments: 12,
+        },
+        {
+          id: 3,
+          group: "Photography Enthusiasts",
+          groupId: 2,
+          user: "Sara J",
+          seed: 12,
+          text: "Captured this golden-hour shot this morning 🌅",
+          img: 400,
+          time: "6 hrs ago",
+          likes: 129,
+          comments: 21,
+        },
+        {
+          id: 4,
+          group: "Foodies United 🍕",
+          groupId: 5,
+          user: "Dev R",
+          seed: 13,
+          text: "Tried making homemade pizza for the first time — nailed it! 🍕",
+          img: 401,
+          time: "1 day ago",
+          likes: 56,
+          comments: 8,
+        },
+      ];
+
+      // ── Render functions ──────────────────────────────────────────
+      function renderFeed() {
+        document.getElementById("groupFeed").innerHTML = feedPosts
+          .map((p) => buildPost(p))
+          .join("");
+      }
+
+      function buildPost(p) {
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(p.user)}&background=random`;
+        return `
+    <div class="card post-card">
+        <div class="card-header bg-white border-0 d-flex align-items-center gap-2 pb-1">
+            <img src="${avatarUrl}" class="rounded-circle" width="38" height="38" alt="${p.user}">
+            <div>
+                <div class="fw-bold" style="font-size:0.9rem;">${p.user}</div>
+                <div style="font-size:0.78rem;color:#65676b;">posted in <a href="#" class="text-primary fw-semibold" onclick="switchSection('your',null)">${p.group}</a> · ${p.time}</div>
+            </div>
+            <i class="fas fa-ellipsis-h ms-auto text-muted" style="cursor:pointer;"></i>
+        </div>
+        <div class="card-body pt-1 pb-0">
+            <p class="mb-2" style="font-size:0.92rem;">${p.text}</p>
+            ${p.img ? `<img src="https://picsum.photos/600/280?random=${p.img}" class="img-fluid rounded-3 w-100 mb-2" alt="">` : ""}
+        </div>
+        <div class="card-footer bg-white border-0 pt-0">
+            <div class="d-flex justify-content-between text-muted small px-1 mb-1">
+                <span onclick="togglePostLike(${p.id})" style="cursor:pointer;"><i class="fas fa-thumbs-up text-primary me-1"></i><span id="lc-${p.id}">${p.likes}</span></span>
+                <span>${p.comments} Comments</span>
+            </div>
+            <hr class="my-1">
+            <div class="d-flex gap-0">
+                <button class="btn btn-light flex-grow-1 like-btn" id="lb-${p.id}" onclick="togglePostLike(${p.id})"><i class="far fa-thumbs-up"></i> Like</button>
+                <button class="btn btn-light flex-grow-1" onclick="showToast('Comment feature coming soon!','info')"><i class="far fa-comment-alt"></i> Comment</button>
+                <button class="btn btn-light flex-grow-1" onclick="showToast('Link copied!','success')"><i class="fas fa-share"></i> Share</button>
+            </div>
+        </div>
+    </div>`;
+      }
+
+      function renderGroups(list, targetId, showJoin = true) {
+        document.getElementById(targetId).innerHTML = list
+          .map(
+            (g) => `
+        <div class="col-6 col-md-4">
+            <div class="group-card card" onclick="openGroup(${g.id})">
+                <img class="group-cover" src="https://picsum.photos/260/120?random=${g.cover}" alt="${g.name}">
+                <div class="card-body">
+                    <div class="group-name">${g.name}</div>
+                    <div class="group-meta">
+                        <i class="${g.privacy === "public" ? "fas fa-globe" : "fas fa-lock"} me-1"></i>${g.privacy} ·
+                        <i class="fas fa-users ms-1 me-1"></i>${g.members} members
+                    </div>
+                    ${
+                      showJoin
+                        ? `<button class="btn-join ${joinedGroups.has(g.id) ? "joined" : ""}" id="join-btn-${g.id}" onclick="toggleJoin(event,${g.id})">
+                        ${joinedGroups.has(g.id) ? '<i class="fas fa-check me-1"></i>Joined' : '<i class="fas fa-user-plus me-1"></i>Join Group'}
+                    </button>`
+                        : ""
+                    }
+                </div>
+            </div>
+        </div>`,
+          )
+          .join("");
+      }
+
+      function renderManagedList() {
+        const managed = groupsData.filter((g) => g.managed);
+        document.getElementById("managedList").innerHTML = managed
+          .map(
+            (g) => `
+        <div class="nav-item-btn" onclick="openGroup(${g.id})">
+            <img src="https://picsum.photos/36/36?random=${g.cover}" class="rounded-circle" width="34" height="34" alt="${g.name}">
+            <div><div style="font-size:0.88rem;font-weight:600;">${g.name}</div><div style="font-size:0.75rem;color:#65676b;">${g.members} members</div></div>
+        </div>`,
+          )
+          .join("");
+      }
+
+      // ── Actions ───────────────────────────────────────────────────
+      function toggleJoin(e, id) {
+        e.stopPropagation();
+        const btn = document.getElementById(`join-btn-${id}`);
+        const g = groupsData.find((x) => x.id === id);
+        if (joinedGroups.has(id)) {
+          joinedGroups.delete(id);
+          btn.className = "btn-join";
+          btn.innerHTML = '<i class="fas fa-user-plus me-1"></i>Join Group';
+          showToast(`Left "${g.name}"`, "info");
+        } else {
+          joinedGroups.add(id);
+          btn.className = "btn-join joined";
+          btn.innerHTML = '<i class="fas fa-check me-1"></i>Joined';
+          showToast(`Joined "${g.name}"! 🎉`, "success");
+        }
+      }
+
+      function openGroup(id) {
+        const g = groupsData.find((x) => x.id === id);
+        showToast(`Opening "${g.name}"…`, "info");
+      }
+
+      function togglePostLike(postId) {
+        const btn = document.getElementById(`lb-${postId}`);
+        const count = document.getElementById(`lc-${postId}`);
+        let n = parseInt(count.textContent);
+        if (likedPosts.has(postId)) {
+          likedPosts.delete(postId);
+          btn.classList.remove("liked");
+          btn.innerHTML = '<i class="far fa-thumbs-up"></i> Like';
+          count.textContent = n - 1;
+        } else {
+          likedPosts.add(postId);
+          btn.classList.add("liked");
+          btn.innerHTML = '<i class="fas fa-thumbs-up text-primary"></i> Liked';
+          count.textContent = n + 1;
+          showToast("You liked this post!", "success");
+        }
+      }
+
+      function switchSection(name, el) {
+        ["feed", "your", "discover"].forEach((s) => {
+          document.getElementById(`section-${s}`).style.display =
+            s === name ? "block" : "none";
+        });
+        document
+          .querySelectorAll(".nav-item-btn")
+          .forEach((i) => i.classList.remove("active"));
+        if (el) el.classList.add("active");
+        if (name === "your")
+          renderGroups(
+            groupsData.filter((g) => joinedGroups.has(g.id)),
+            "yourGroupsGrid",
+            true,
+          );
+        if (name === "discover")
+          renderGroups(
+            groupsData.filter((g) => !joinedGroups.has(g.id)),
+            "discoverGrid",
+            true,
+          );
+      }
+
+      function searchGroups(q) {
+        const filtered = q
+          ? groupsData.filter((g) =>
+              g.name.toLowerCase().includes(q.toLowerCase()),
+            )
+          : groupsData;
+        switchSection(
+          "discover",
+          document.querySelectorAll(".nav-item-btn")[2],
+        );
+        renderGroups(filtered, "discoverGrid", true);
+      }
+
+      // ── Create Group ──────────────────────────────────────────────
+      function openCreateModal() {
+        new bootstrap.Modal(document.getElementById("createGroupModal")).show();
+      }
+
+      function selectPrivacy(type, el) {
+        selectedPrivacy = type;
+        document
+          .querySelectorAll(".privacy-option")
+          .forEach((o) => o.classList.remove("selected"));
+        el.classList.add("selected");
+      }
+
+      function createGroup() {
+        const name = document.getElementById("groupNameInput").value.trim();
+        const cat = document.getElementById("groupCategory").value;
+        if (!name) {
+          showToast("Please enter a group name!", "info");
+          return;
+        }
+        const newGroup = {
+          id: Date.now(),
+          name,
+          members: "1",
+          posts: 0,
+          cover: Math.floor(Math.random() * 50) + 350,
+          category: cat,
+          privacy: selectedPrivacy,
+          managed: true,
+        };
+        groupsData.unshift(newGroup);
+        joinedGroups.add(newGroup.id);
+        bootstrap.Modal.getInstance(
+          document.getElementById("createGroupModal"),
+        ).hide();
+        document.getElementById("groupNameInput").value = "";
+        renderManagedList();
+        switchSection("your", document.querySelectorAll(".nav-item-btn")[1]);
+        showToast(`Group "${name}" created! 🎉`, "success");
+      }
+
+      // ── Dark Mode & Toast ─────────────────────────────────────────
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        document.querySelector("#darkModeToggle i").className =
+          document.body.classList.contains("dark-mode")
+            ? "fas fa-sun"
+            : "fas fa-moon";
+        showToast(
+          document.body.classList.contains("dark-mode")
+            ? "Dark mode on 🌙"
+            : "Light mode on ☀️",
+          "info",
+        );
+      }
+      function showToast(message, type = "info") {
+        const c = document.getElementById("toast-container"),
+          t = document.createElement("div");
+        t.className = `fb-toast ${type}`;
+        t.textContent = message;
+        c.appendChild(t);
+        setTimeout(() => {
+          t.style.opacity = "0";
+          t.style.transition = "opacity 0.4s";
+          setTimeout(() => t.remove(), 400);
+        }, 2500);
+      }
+      function loadProfile() {
+        const s = localStorage.getItem("fbProfile");
+        if (s)
+          document.getElementById("navbar-user-img").src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(JSON.parse(s).name)}&background=random`;
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProfile();
+        renderFeed();
+        renderManagedList();
+      });
+    </script>
+  </body>
+</html>

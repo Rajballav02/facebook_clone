@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marketplace – Facebook Style</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      /* ── Dark Mode ── */
+      body.dark-mode {
+        background: #18191a;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .sidebar-nav,
+      body.dark-mode .card,
+      body.dark-mode .modal-content {
+        background: #242526 !important;
+        border-color: #3a3b3c !important;
+        color: #e4e6eb;
+      }
+
+      body.dark-mode .cat-item:hover,
+      body.dark-mode .cat-item.active {
+        background: #3a3b3c !important;
+      }
+
+      body.dark-mode .search-wrap input {
+        background: #3a3b3c;
+        color: #e4e6eb;
+        border-color: #555;
+      }
+
+      body.dark-mode .text-muted {
+        color: #b0b3b8 !important;
+      }
+
+      body.dark-mode .filter-bar {
+        background: #242526;
+        border-color: #3a3b3c;
+      }
+
+      body.dark-mode .price-tag {
+        background: rgba(0, 0, 0, 0.7);
+      }
+
+      body.dark-mode .form-control,
+      body.dark-mode .form-select {
+        background: #3a3b3c;
+        color: #e4e6eb;
+        border-color: #555;
+      }
+
+      /* ── Navbar ── */
+      .navbar {
+        background: #1877f2 !important;
+      }
+
+      .navbar-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+
+      .navbar-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.12);
+      }
+
+      /* ── Page Layout ── */
+      .page-wrap {
+        display: flex;
+        margin-top: 56px;
+        min-height: calc(100vh - 56px);
+      }
+
+      /* ── Sidebar ── */
+      .sidebar-nav {
+        width: 320px;
+        flex-shrink: 0;
+        background: white;
+        border-right: 1px solid #e4e6eb;
+        padding: 12px 8px;
+        position: sticky;
+        top: 56px;
+        height: calc(100vh - 56px);
+        overflow-y: auto;
+      }
+
+      .sidebar-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        padding: 8px 12px 12px;
+      }
+
+      .search-wrap {
+        padding: 0 8px 12px;
+      }
+
+      .search-wrap input {
+        width: 100%;
+        border: none;
+        background: #f0f2f5;
+        border-radius: 20px;
+        padding: 9px 16px;
+        outline: none;
+        font-size: 0.9rem;
+      }
+
+      .search-wrap input:focus {
+        background: #e4e6eb;
+      }
+
+      .sidebar-section-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #65676b;
+        padding: 4px 12px 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .cat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.93rem;
+        transition:
+          background 0.15s,
+          padding-left 0.15s;
+      }
+
+      .cat-item:hover {
+        background: #f0f2f5;
+        padding-left: 16px;
+      }
+
+      .cat-item.active {
+        background: #e7f3ff;
+        color: #1877f2;
+        font-weight: 700;
+      }
+
+      .cat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .sell-btn {
+        width: 100%;
+        background: #1877f2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        margin: 12px 0 4px;
+        transition:
+          background 0.2s,
+          transform 0.1s;
+      }
+
+      .sell-btn:hover {
+        background: #166fe5;
+        transform: scale(1.02);
+      }
+
+      /* ── Filter Bar ── */
+      .filter-bar {
+        background: white;
+        border-bottom: 1px solid #e4e6eb;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .filter-chip {
+        background: #f0f2f5;
+        border: none;
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.1s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .filter-chip:hover {
+        background: #e4e6eb;
+        transform: scale(1.03);
+      }
+
+      .filter-chip.active {
+        background: #1877f2;
+        color: white;
+      }
+
+      /* ── Main Content ── */
+      .main-content {
+        flex: 1;
+        padding: 16px 20px;
+        overflow-y: auto;
+      }
+
+      .section-heading {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+
+      /* ── Product Card ── */
+      .product-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        transition:
+          box-shadow 0.2s,
+          transform 0.2s;
+        background: white;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .product-card:hover {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+        transform: translateY(-4px);
+      }
+
+      .product-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.2s;
+      }
+
+      .product-card:hover img {
+        opacity: 0.93;
+      }
+
+      .product-card .card-body {
+        padding: 10px 12px 12px;
+      }
+
+      .product-price {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #1d1d1d;
+      }
+
+      .product-title {
+        font-size: 0.88rem;
+        color: #444;
+        margin: 2px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .product-location {
+        font-size: 0.78rem;
+        color: #888;
+      }
+
+      .wishlist-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .wishlist-btn:hover {
+        background: white;
+        transform: scale(1.15);
+      }
+
+      .wishlist-btn.saved i {
+        color: #e0245e;
+      }
+
+      .badge-new {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #42b72a;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 20px;
+      }
+
+      /* ── Category Hero Cards ── */
+      .cat-hero {
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        height: 120px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .cat-hero:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      }
+
+      .cat-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .cat-hero-label {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 12px 10px 8px;
+      }
+
+      /* ── Toast ── */
+      #toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .fb-toast {
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        animation: toastIn 0.3s ease;
+        min-width: 200px;
+      }
+
+      .fb-toast.success {
+        border-left: 4px solid #42b72a;
+      }
+
+      .fb-toast.info {
+        border-left: 4px solid #1877f2;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* ── Fade Animation ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-up {
+        animation: fadeUp 0.3s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-dark fixed-top shadow-sm px-3 d-flex align-items-center justify-content-between"
+    >
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="fab fa-facebook fa-lg me-1"></i> Facebook
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <div
+          class="navbar-icon-btn"
+          onclick="toggleDarkMode()"
+          id="darkModeToggle"
+          title="Toggle Dark Mode"
+        >
+          <i class="fas fa-moon"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Home"
+          onclick="window.location.href = 'index.html'"
+        >
+          <i class="fas fa-home"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Friends"
+          onclick="window.location.href = 'friends.html'"
+        >
+          <i class="fas fa-user-friends"></i>
+        </div>
+        <div
+          class="navbar-icon-btn"
+          title="Messages"
+          onclick="window.location.href = 'messages.html'"
+        >
+          <i class="fab fa-facebook-messenger"></i>
+        </div>
+        <img
+          src="https://ui-avatars.com/api/?name=sriyans&amp;background=random"
+          id="navbar-user-img"
+          class="rounded-circle"
+          width="36"
+          height="36"
+          onclick="window.location.href = 'profile.html'"
+          title="Profile"
+          style="cursor: pointer; border: 2px solid white"
+          alt="Profile"
+        />
+      </div>
+    </nav>
+
+    <!-- Page Wrap -->
+    <div class="page-wrap">
+      <!-- ── Sidebar ── -->
+      <div class="sidebar-nav">
+        <div class="sidebar-title">
+          <i class="fas fa-store text-primary me-2"></i>Marketplace
+        </div>
+
+        <div class="search-wrap">
+          <input
+            type="text"
+            placeholder="Search Marketplace"
+            id="sidebarSearch"
+            oninput="searchProducts(this.value)"
+          />
+        </div>
+
+        <button class="sell-btn" onclick="openSellModal()">
+          <i class="fas fa-plus me-2"></i> Create New Listing
+        </button>
+
+        <div class="sidebar-section-title mt-2">Browse</div>
+        <div class="cat-item active" onclick="filterCategory('all', this)">
+          <div class="cat-icon" style="background: #e7f3ff; color: #1877f2">
+            <i class="fas fa-th-large"></i>
+          </div>
+          All Categories
+        </div>
+        <div class="cat-item" onclick="filterCategory('vehicles', this)">
+          <div class="cat-icon" style="background: #fff3cd; color: #e6a817">
+            <i class="fas fa-car"></i>
+          </div>
+          Vehicles
+        </div>
+        <div class="cat-item" onclick="filterCategory('electronics', this)">
+          <div class="cat-icon" style="background: #d4edda; color: #28a745">
+            <i class="fas fa-laptop"></i>
+          </div>
+          Electronics
+        </div>
+        <div class="cat-item" onclick="filterCategory('furniture', this)">
+          <div class="cat-icon" style="background: #f8d7da; color: #dc3545">
+            <i class="fas fa-couch"></i>
+          </div>
+          Furniture
+        </div>
+        <div class="cat-item" onclick="filterCategory('clothing', this)">
+          <div class="cat-icon" style="background: #e2d9f3; color: #7b2fc2">
+            <i class="fas fa-tshirt"></i>
+          </div>
+          Clothing
+        </div>
+        <div class="cat-item" onclick="filterCategory('garden', this)">
+          <div class="cat-icon" style="background: #d4edda; color: #198754">
+            <i class="fas fa-leaf"></i>
+          </div>
+          Garden &amp; Outdoor
+        </div>
+        <div class="cat-item" onclick="filterCategory('toys', this)">
+          <div class="cat-icon" style="background: #ffeeba; color: #d39e00">
+            <i class="fas fa-puzzle-piece"></i>
+          </div>
+          Toys &amp; Games
+        </div>
+        <div class="cat-item" onclick="filterCategory('sports', this)">
+          <div class="cat-icon" style="background: #cfe2ff; color: #0d6efd">
+            <i class="fas fa-football-ball"></i>
+          </div>
+          Sports
+        </div>
+      </div>
+
+      <!-- ── Main Content ── -->
+      <div class="main-content">
+        <!-- Filter Bar -->
+        <div class="filter-bar mb-3 rounded-3">
+          <span class="fw-bold me-2">Filter:</span>
+          <button
+            class="filter-chip active"
+            onclick="toggleSort('latest', this)"
+          >
+            <i class="fas fa-clock"></i> Latest
+          </button>
+          <button class="filter-chip" onclick="toggleSort('price-asc', this)">
+            <i class="fas fa-sort-amount-up"></i> Price: Low–High
+          </button>
+          <button class="filter-chip" onclick="toggleSort('price-desc', this)">
+            <i class="fas fa-sort-amount-down"></i> Price: High–Low
+          </button>
+          <button class="filter-chip" onclick="toggleSort('nearby', this)">
+            <i class="fas fa-map-marker-alt"></i> Nearby
+          </button>
+        </div>
+
+        <!-- Category Hero Row -->
+        <div class="section-heading">Browse by Category</div>
+        <div class="row g-2 mb-4" id="catHeroRow">
+          <div class="col-6 col-md-3">
+            <div class="cat-hero" onclick="filterCategory('vehicles', null)">
+              <img
+                src="https://picsum.photos/200/120?random=50"
+                alt="Vehicles"
+              />
+              <div class="cat-hero-label">🚗 Vehicles</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="cat-hero" onclick="filterCategory('electronics', null)">
+              <img
+                src="https://picsum.photos/200/120?random=51"
+                alt="Electronics"
+              />
+              <div class="cat-hero-label">💻 Electronics</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="cat-hero" onclick="filterCategory('furniture', null)">
+              <img
+                src="https://picsum.photos/200/120?random=52"
+                alt="Furniture"
+              />
+              <div class="cat-hero-label">🛋️ Furniture</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="cat-hero" onclick="filterCategory('clothing', null)">
+              <img
+                src="https://picsum.photos/200/120?random=53"
+                alt="Clothing"
+              />
+              <div class="cat-hero-label">👗 Clothing</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="section-heading">Today's Picks</div>
+        <div class="row g-3" id="productsGrid"></div>
+      </div>
+    </div>
+
+    <!-- ── Product Detail Modal ── -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button
+              class="btn-close"
+              data-bs-dismiss="modal"
+              title="Close"
+            ></button>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <img
+                  id="modalProductImg"
+                  src=""
+                  class="img-fluid rounded-3 w-100"
+                  style="max-height: 320px; object-fit: cover"
+                  alt="Product"
+                />
+              </div>
+              <div class="col-md-6">
+                <h4 id="modalProductTitle" class="fw-bold"></h4>
+                <h3 id="modalProductPrice" class="text-primary fw-bold"></h3>
+                <div class="text-muted mb-2" id="modalProductLocation"></div>
+                <div class="text-muted mb-3" id="modalProductDesc"></div>
+                <hr />
+                <h6 class="fw-bold mb-2">Seller</h6>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <img
+                    id="modalSellerAvatar"
+                    src=""
+                    class="rounded-circle"
+                    width="40"
+                    height="40"
+                    alt="Seller"
+                  />
+                  <div>
+                    <div class="fw-bold" id="modalSellerName"></div>
+                    <div class="text-muted small">Member since 2021</div>
+                  </div>
+                </div>
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-primary flex-grow-1"
+                    onclick="showToast('Message sent to seller! 📩', 'success')"
+                  >
+                    <i class="fab fa-facebook-messenger me-1"></i> Message
+                    Seller
+                  </button>
+                  <button
+                    class="btn btn-light px-3"
+                    onclick="showToast('Added to wishlist ❤️', 'success')"
+                  >
+                    <i class="far fa-heart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Sell / Create Listing Modal ── -->
+    <div class="modal fade" id="sellModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Create New Listing</h5>
+            <button
+              class="btn-close"
+              data-bs-dismiss="modal"
+              title="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="sellForm">
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="sellTitle"
+                  placeholder="What are you selling?"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Price (₹)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="sellPrice"
+                  placeholder="0"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Category</label>
+                <select class="form-select" id="sellCategory">
+                  <option value="electronics">Electronics</option>
+                  <option value="furniture">Furniture</option>
+                  <option value="clothing">Clothing</option>
+                  <option value="vehicles">Vehicles</option>
+                  <option value="toys">Toys &amp; Games</option>
+                  <option value="sports">Sports</option>
+                  <option value="garden">Garden &amp; Outdoor</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Location</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="sellLocation"
+                  placeholder="City, State"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea
+                  class="form-control"
+                  id="sellDesc"
+                  rows="3"
+                  placeholder="Describe your item..."
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button class="btn btn-primary" onclick="submitListing()">
+              <i class="fas fa-plus me-1"></i> Publish Listing
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      /* ══════════════════════════════════════════════════════════════
+           marketplace.js
+        ══════════════════════════════════════════════════════════════ */
+
+      // ── Product Data ──────────────────────────────────────────────
+      let products = [
+        {
+          id: 1,
+          title: "iPhone 14 Pro Max",
+          price: 75000,
+          category: "electronics",
+          location: "Mumbai, MH",
+          imgSeed: 60,
+          seller: "Rahul K",
+          sellerSeed: 70,
+          desc: "Used 6 months, excellent condition. Comes with original box and charger.",
+          isNew: true,
+        },
+        {
+          id: 2,
+          title: "Vintage Leather Sofa",
+          price: 12000,
+          category: "furniture",
+          location: "Delhi, DL",
+          imgSeed: 61,
+          seller: "Anjali S",
+          sellerSeed: 71,
+          desc: "3-seater vintage leather sofa. Minor wear. Pick up only.",
+          isNew: false,
+        },
+        {
+          id: 3,
+          title: "Honda City 2019",
+          price: 650000,
+          category: "vehicles",
+          location: "Pune, MH",
+          imgSeed: 62,
+          seller: "Vikram T",
+          sellerSeed: 72,
+          desc: "Single owner, 45,000 km driven. All papers clear. AC, airbags, sunroof.",
+          isNew: false,
+        },
+        {
+          id: 4,
+          title: "Nike Air Max 270",
+          price: 4500,
+          category: "clothing",
+          location: "Bangalore, KA",
+          imgSeed: 63,
+          seller: "Priya M",
+          sellerSeed: 73,
+          desc: "Size 10, worn twice. Like new condition.",
+          isNew: true,
+        },
+        {
+          id: 5,
+          title: "Gaming Chair RGB",
+          price: 8500,
+          category: "furniture",
+          location: "Chennai, TN",
+          imgSeed: 64,
+          seller: "Arjun P",
+          sellerSeed: 74,
+          desc: "Ergonomic gaming chair with lumbar support and RGB lighting. 6 months old.",
+          isNew: false,
+        },
+        {
+          id: 6,
+          title: "DSLR Canon EOS 1500D",
+          price: 22000,
+          category: "electronics",
+          location: "Hyderabad, TS",
+          imgSeed: 65,
+          seller: "Sara J",
+          sellerSeed: 75,
+          desc: "With 18-55mm kit lens, extra battery, 32GB SD card. Shutter count: 8000.",
+          isNew: false,
+        },
+        {
+          id: 7,
+          title: "Mountain Bicycle",
+          price: 6000,
+          category: "sports",
+          location: "Kolkata, WB",
+          imgSeed: 66,
+          seller: "Dev R",
+          sellerSeed: 76,
+          desc: "21-speed gear, disc brakes, barely used. Great for trails.",
+          isNew: true,
+        },
+        {
+          id: 8,
+          title: "Indoor Plant Set (5)",
+          price: 1200,
+          category: "garden",
+          location: "Jaipur, RJ",
+          imgSeed: 67,
+          seller: "Meera L",
+          sellerSeed: 77,
+          desc: "Set of 5 indoor succulents with ceramic pots. Healthy and vibrant.",
+          isNew: false,
+        },
+        {
+          id: 9,
+          title: "Lego Technic Set",
+          price: 3500,
+          category: "toys",
+          location: "Ahmedabad, GJ",
+          imgSeed: 68,
+          seller: "Rohan A",
+          sellerSeed: 78,
+          desc: "Complete set, all pieces present. Assembled once, great for collectors.",
+          isNew: false,
+        },
+        {
+          id: 10,
+          title: "MacBook Air M1",
+          price: 68000,
+          category: "electronics",
+          location: "Noida, UP",
+          imgSeed: 69,
+          seller: "Nisha B",
+          sellerSeed: 79,
+          desc: "8GB RAM, 256GB SSD. Battery health 94%. Original charger included.",
+          isNew: true,
+        },
+        {
+          id: 11,
+          title: "Teak Wood Dining Table",
+          price: 18000,
+          category: "furniture",
+          location: "Surat, GJ",
+          imgSeed: 71,
+          seller: "Kiran V",
+          sellerSeed: 80,
+          desc: "6-seater solid teak dining table. 3 years old, minor scratches.",
+          isNew: false,
+        },
+        {
+          id: 12,
+          title: "Adidas Running Shoes",
+          price: 2200,
+          category: "clothing",
+          location: "Lucknow, UP",
+          imgSeed: 72,
+          seller: "Tanya R",
+          sellerSeed: 81,
+          desc: "Size 8, used for gym only about 10 times. Very good condition.",
+          isNew: false,
+        },
+      ];
+
+      const wishlist = new Set();
+      let currentFilter = "all";
+      let currentSort = "latest";
+      let searchQuery = "";
+
+      // ── Render Products ───────────────────────────────────────────
+      function getFilteredProducts() {
+        let list = [...products];
+        if (currentFilter !== "all")
+          list = list.filter((p) => p.category === currentFilter);
+        if (searchQuery)
+          list = list.filter(
+            (p) =>
+              p.title.toLowerCase().includes(searchQuery) ||
+              p.location.toLowerCase().includes(searchQuery) ||
+              p.category.toLowerCase().includes(searchQuery),
+          );
+        if (currentSort === "price-asc") list.sort((a, b) => a.price - b.price);
+        if (currentSort === "price-desc")
+          list.sort((a, b) => b.price - a.price);
+        return list;
+      }
+
+      function renderProducts() {
+        const grid = document.getElementById("productsGrid");
+        const list = getFilteredProducts();
+
+        if (!list.length) {
+          grid.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+            <i class="fas fa-search fa-3x mb-3 d-block text-secondary"></i>
+            No listings found. Try a different search or category.
+        </div>`;
+          return;
+        }
+
+        grid.innerHTML = list
+          .map(
+            (p) => `
+        <div class="col-6 col-md-4 col-lg-3 fade-up">
+            <div class="product-card card" onclick="openProduct(${p.id})">
+                ${p.isNew ? '<span class="badge-new">NEW</span>' : ""}
+                <button class="wishlist-btn ${wishlist.has(p.id) ? "saved" : ""}" id="wl-${p.id}"
+                        onclick="toggleWishlist(event, ${p.id})" title="Save">
+                    <i class="${wishlist.has(p.id) ? "fas" : "far"} fa-heart"></i>
+                </button>
+                <img src="https://picsum.photos/200/160?random=${p.imgSeed}" alt="${p.title}" loading="lazy">
+                <div class="card-body">
+                    <div class="product-price">₹${p.price.toLocaleString()}</div>
+                    <div class="product-title">${p.title}</div>
+                    <div class="product-location"><i class="fas fa-map-marker-alt me-1"></i>${p.location}</div>
+                </div>
+            </div>
+        </div>
+    `,
+          )
+          .join("");
+      }
+
+      // ── Open Product Detail Modal ─────────────────────────────────
+      function openProduct(id) {
+        const p = products.find((x) => x.id === id);
+        if (!p) return;
+        document.getElementById("modalProductImg").src =
+          `https://picsum.photos/400/320?random=${p.imgSeed}`;
+        document.getElementById("modalProductTitle").textContent = p.title;
+        document.getElementById("modalProductPrice").textContent =
+          `₹${p.price.toLocaleString()}`;
+        document.getElementById("modalProductLocation").innerHTML =
+          `<i class="fas fa-map-marker-alt me-1"></i>${p.location}`;
+        document.getElementById("modalProductDesc").textContent = p.desc;
+        document.getElementById("modalSellerName").textContent = p.seller;
+        document.getElementById("modalSellerAvatar").src =
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(p.seller)}&background=random`;
+        new bootstrap.Modal(document.getElementById("productModal")).show();
+      }
+
+      // ── Wishlist Toggle ───────────────────────────────────────────
+      function toggleWishlist(e, id) {
+        e.stopPropagation();
+        const btn = document.getElementById(`wl-${id}`);
+        if (wishlist.has(id)) {
+          wishlist.delete(id);
+          btn.classList.remove("saved");
+          btn.innerHTML = '<i class="far fa-heart"></i>';
+          showToast("Removed from wishlist", "info");
+        } else {
+          wishlist.add(id);
+          btn.classList.add("saved");
+          btn.innerHTML = '<i class="fas fa-heart" style="color:#e0245e;"></i>';
+          showToast("Saved to wishlist ❤️", "success");
+        }
+      }
+
+      // ── Category Filter ───────────────────────────────────────────
+      function filterCategory(cat, clickedEl) {
+        currentFilter = cat;
+        document
+          .querySelectorAll(".cat-item")
+          .forEach((el) => el.classList.remove("active"));
+        if (clickedEl) clickedEl.classList.add("active");
+        renderProducts();
+        const name =
+          cat === "all"
+            ? "All Categories"
+            : cat.charAt(0).toUpperCase() + cat.slice(1);
+        document.querySelector(".section-heading:last-of-type").textContent =
+          cat === "all" ? "Today's Picks" : `${name} Listings`;
+      }
+
+      // ── Sort ──────────────────────────────────────────────────────
+      function toggleSort(sort, el) {
+        currentSort = sort;
+        document
+          .querySelectorAll(".filter-chip")
+          .forEach((c) => c.classList.remove("active"));
+        el.classList.add("active");
+        renderProducts();
+      }
+
+      // ── Search ────────────────────────────────────────────────────
+      function searchProducts(query) {
+        searchQuery = query.toLowerCase().trim();
+        renderProducts();
+      }
+
+      // ── Create Listing Modal ──────────────────────────────────────
+      function openSellModal() {
+        new bootstrap.Modal(document.getElementById("sellModal")).show();
+      }
+
+      function submitListing() {
+        const title = document.getElementById("sellTitle").value.trim();
+        const price = parseInt(document.getElementById("sellPrice").value) || 0;
+        const category = document.getElementById("sellCategory").value;
+        const location =
+          document.getElementById("sellLocation").value.trim() || "Your City";
+        const desc =
+          document.getElementById("sellDesc").value.trim() ||
+          "No description provided.";
+
+        if (!title) {
+          showToast("Please enter a title!", "info");
+          return;
+        }
+        if (!price) {
+          showToast("Please enter a price!", "info");
+          return;
+        }
+
+        const saved = localStorage.getItem("fbProfile");
+        const sellerName = saved ? JSON.parse(saved).name : "You";
+        const newProduct = {
+          id: Date.now(),
+          title,
+          price,
+          category,
+          location,
+          desc,
+          imgSeed: Math.floor(Math.random() * 100) + 200,
+          seller: sellerName,
+          sellerSeed: 99,
+          isNew: true,
+        };
+        products.unshift(newProduct);
+        filterCategory("all", document.querySelector(".cat-item"));
+        bootstrap.Modal.getInstance(
+          document.getElementById("sellModal"),
+        ).hide();
+        document.getElementById("sellForm").reset();
+        showToast(`"${title}" listed successfully! 🎉`, "success");
+      }
+
+      // ── Dark Mode ─────────────────────────────────────────────────
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        const icon = document.querySelector("#darkModeToggle i");
+        icon.className = document.body.classList.contains("dark-mode")
+          ? "fas fa-sun"
+          : "fas fa-moon";
+        showToast(
+          document.body.classList.contains("dark-mode")
+            ? "Dark mode on 🌙"
+            : "Light mode on ☀️",
+          "info",
+        );
+      }
+
+      // ── Toast ─────────────────────────────────────────────────────
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `fb-toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          toast.style.transition = "opacity 0.4s";
+          setTimeout(() => toast.remove(), 400);
+        }, 2500);
+      }
+
+      // ── Load Profile ──────────────────────────────────────────────
+      function loadProfile() {
+        const saved = localStorage.getItem("fbProfile");
+        if (saved) {
+          const p = JSON.parse(saved);
+          document.getElementById("navbar-user-img").src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random`;
+        }
+      }
+
+      // ── Init ──────────────────────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProfile();
+        renderProducts();
+      });
+    </script>
+  </body>
+</html>
